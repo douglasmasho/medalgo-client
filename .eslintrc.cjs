@@ -14,6 +14,7 @@ module.exports = {
 	rules: {
 		"react/prop-types": "off",
 		"react/no-unescaped-entities": "off",
+		"react/react-in-jsx-scope": "off",
 		"react/jsx-no-target-blank": "off",
 		"react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
 	},

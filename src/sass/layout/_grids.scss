@@ -1,5 +1,6 @@
 .grid{
     display: grid;
+    grid-gap: 20px;
     
     &-2{
         grid-template-columns: repeat(2, 1fr);
@@ -20,7 +21,6 @@
     }
 
     &-3{
-      grid-gap: 20px;
         grid-template-columns: repeat(3, 1fr);
         @include respond(tab-port){  
             grid-template-columns: repeat(2, 1fr);
