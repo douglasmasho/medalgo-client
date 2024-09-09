@@ -19,8 +19,18 @@ const iconStyle = {
 
 const DetectPage = () => {
   const [files, setFiles] = useState([]);
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState("https://randomuser.me/api/portraits/men/3.jpg");
   const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
+  const [classifyRes, setClassifyRes] = useState({
+    predicted_class: 'meningioma',
+    class_probabilities: {
+      glioma: 0.0000046670269426840605,
+      meningioma: 98.36751818656921,
+      notumor: 1.632477529346943,
+      pituitary: 0.000004770727102254568
+    }
+  });
   return (
     <div className="flex-1 overflow-auto relative z-10">
       <Header
@@ -43,8 +53,8 @@ const DetectPage = () => {
           <div className="grid grid-2 u-margin-bottom-medium">
 
             <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700 center-text">
-            <h3 className="bigish-text mt-3">Input</h3>
-             
+              <h3 className="bigish-text mt-3">Input</h3>
+
               <div className="px-4 py-5 sm:p-6 ">
                 <FilePond
                   files={files}
@@ -68,13 +78,20 @@ const DetectPage = () => {
                       formData.append("file", file);
 
                       const request = new XMLHttpRequest();
+                      const request2 = new XMLHttpRequest();
 
                       request.open(
                         "POST",
                         "https://medalgo-detect.onrender.com/predict"
                       );
 
+                      request2.open(
+                        "POST",
+                        "https://medalgo-classify.onrender.com/predict"
+                      )
+
                       request.responseType = "blob";
+
 
                       request.upload.onprogress = (e) => {
                         progress(e.lengthComputable, e.loaded, e.total);
@@ -94,15 +111,27 @@ const DetectPage = () => {
                         }
                       };
 
-                      request.send(formData);
-                      setLoading(true)
+                      request2.onload = async function () {
+                        if (request2.status >= 200 && request2.status < 300) {
+                          // the load method accepts either a string (id) or an object
+                          const respObj = await JSON.parse(request2.response);
+                          setClassifyRes(respObj)
+                        } else {
+                          // Can call the error method if something is wrong, should exit after
+                          error("oh no");
+                        }
+                      };
 
+                      request.send(formData);
+                      request2.send(formData);
+                      setLoading(true)
+                      setLoading2(true)
                       return {
                         abort: () => {
                           request.abort();
-
-                          // Let FilePond know the request has been cancelled
+                          request2.abort();
                           abort();
+
                         },
                       };
                     },
@@ -113,25 +142,36 @@ const DetectPage = () => {
             </div>
 
             <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700 center-text">
-            <h3 className="bigish-text mt-3">Output</h3>
-              
+              <h3 className="bigish-text mt-3">Output</h3>
+
               <div className="px-4 py-5 sm:p-6">
-                { loading ?
-                <div style={{textAlign: "center"}}>
+                {loading ?
+                  <div style={{ textAlign: "center" }}>
                     <p>Medalgo is processing your image...</p>
-                <Lottie animationData={animation}/> 
-                </div>
-                
-                :
-                url == "" ? (
-                  <Brain
-                    style={{ color: "#3B82F6" }}
-                    size={100}
-                    className="u-margin-bottom-small"
-                  />
-                ) : (
-                    <img src={url} alt="" style={{width: "100%", borderRadius: "20px"}}/>
-                )
+                    <Lottie animationData={animation} />
+                  </div>
+
+                  :
+                  url == "" ? (
+                    <Brain
+                      style={{ color: "#3B82F6" }}
+                      size={100}
+                      className="u-margin-bottom-small"
+                    />
+                  ) : (
+                    <div>
+                      <img src={url} className="u-margin-bottom" alt="" style={{ width: "100%", borderRadius: "20px" }} />
+                      <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+                        <button className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto'>
+                          Download Image
+                        </button>
+                        <button className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto '>
+                          Save to Patient
+                        </button>
+                      </div>
+
+                    </div>
+                  )
                 }
 
               </div>
@@ -147,7 +187,26 @@ const DetectPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 1 }}
         >
-          {/* Results Part */}
+          <div className="grid grid-2 u-margin-bottom-medium">
+            <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700 p-5">
+              <p className="">Major class probabilities</p>
+              <h3 className="bigger2-text capitalize-text">{classifyRes.predicted_class} <span className="blue-text">{(classifyRes.class_probabilities[classifyRes.predicted_class]).toFixed(2)}%</span></h3>
+
+              <div className="px-4 py-5 sm:p-6 ">
+
+              </div>
+            </div>
+
+            <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700 p-5">
+              <h3 className="bigish-text mt-3">Output</h3>
+
+              <div className="px-4 py-5 sm:p-6 ">
+
+              </div>
+            </div>
+          </div>
+
+
         </motion.div>
       </main>
     </div>
