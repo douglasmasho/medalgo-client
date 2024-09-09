@@ -18,6 +18,11 @@ const class_probabilities = {
     pituitary: 0.000004770727102254568
   }
 
+
+  const convertToData = (object)=>{
+    
+  }
+
 const CategoryDistributionChart = () => {
 	return (
 		<motion.div
