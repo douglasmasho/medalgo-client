@@ -251,7 +251,9 @@ const DetectPage = () => {
               <h2 className="u-margin-bottom-small mt-10 medium-text">Symptoms</h2>
               <p className="u-margin-bottom-small">{gliomaData.symptomsHeader}</p>
               {
-                
+                gliomaData.symptoms.map((item, index)=>(
+                  <li className="pl-5" key={index}>{item}</li>
+                ))
               }
               </div>
             </div>
