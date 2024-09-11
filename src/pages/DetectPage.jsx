@@ -11,7 +11,7 @@ import Lottie from "lottie-react";
 import animation from "../assets/animation/loadingbrain.json";
 import PieChartCustom from "../components/charts/PieChartCustom";
 import BarGraphCustom from "../components/charts/BarGraphCustom";
-import { gliomaData } from "../data/information";
+import { gliomaData, tumorData } from "../data/information";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -21,16 +21,6 @@ const iconStyle = {
 };
 
 const convertToData = (object) => {
-  // const data = {
-	// 	labels: ["mon", "Tue", "Wed"],
-	// 	datasets: [
-	// 		{
-	// 			label: "",
-	// 			data: [100,200,300],
-	// 			backgroundColor: ["red", "blue", "orange"]
-	// 		}
-	// 	]
-	// }
   const labelArr = [];
   const dataArr = []
   for (const x in object) {
@@ -53,6 +43,8 @@ const DetectPage = () => {
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const [classifyRes, setClassifyRes] = useState(null);
+  const [tumorType, setTumorType] = useState("");
+  const [data, setData] = useState(tumorData.pituitary);
   return (
     <div className="flex-1 overflow-auto relative z-10">
       <Header
@@ -137,7 +129,8 @@ const DetectPage = () => {
                         if (request2.status >= 200 && request2.status < 300) {
                           // the load method accepts either a string (id) or an object
                           const respObj = await JSON.parse(request2.response);
-                          setClassifyRes(respObj)
+                          setClassifyRes(respObj);
+                          setTumorType(respObj.predicted_class)
                           setLoading2(false)
                         } else {
                           // Can call the error method if something is wrong, should exit after
@@ -173,14 +166,9 @@ const DetectPage = () => {
                     <p>Medalgo is processing your image...</p>
                     <Lottie animationData={animation} />
                   </div>
-
                   :
                   url == "" ? (
-                    <Brain
-                      style={{ color: "#3B82F6" }}
-                      size={100}
-                      className="u-margin-bottom-small"
-                    />
+                    <Brain style={{ color: "#3B82F6" }} size={100} className="u-margin-bottom-small"/>
                   ) : (
                     <div>
                       <img src={url} className="u-margin-bottom" alt="" style={{ width: "100%", borderRadius: "20px" }} />
@@ -237,25 +225,57 @@ const DetectPage = () => {
             </div>
 
             <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700 p-5" style={{maxHeight: "400px", overflowY: "scroll", overflowX: "hidden"}}>
-
-              <div className="">
-               <h3 className="bigger-text capitalize-text">{gliomaData.name} <span className="blue-text">Information</span></h3>
-               <p className="u-margin-bottom-small">Source: <a href="https://www.mayoclinic.org/diseases-conditions/glioma/symptoms-causes/syc-20350251" target="_blank" style={{color: "#61DBFB"}}>Mayoclinic</a></p>
-              <h2 className="u-margin-bottom-small medium-text">What is a {gliomaData.name}?</h2>
+            <p className="">Information Panel</p>
               {
-                gliomaData.description.split("\n\n").map((para, index)=>(
-                  <p className="u-margin-bottom-small" key={index}>{para}</p>
-                ))
-              }
+                loading2 ? 
+                <Lottie animationData={animation} /> :
+<div className="">
+                {
+                  tumorType === "" ?
+                  <div style={{display: "flex", justifyContent: "center", alignItems: "center", height: "100%"}}>
+                     <Brain
+                        style={{ color: "#3B82F6" }}
+                        size={100}
+                        className="u-margin-bottom-small"/>
+                  </div>
+                      :
+                     tumorType === "notumor" ?
+                   <h3 className="bigger-text capitalize-text">All good here</h3> :
+                   <>
+                        <h3 className="bigger-text capitalize-text">{tumorData[tumorType].name} <span className="blue-text">Information</span></h3>
+                        <p className="u-margin-bottom-small">Sources: 
+                          {
+                            tumorData[tumorType].sources.map((item, index)=>(<a href={item.link} key={index} target="_blank" style={{color: "#61DBFB"}}> | {item.name}</a>))
+                          }
+                          </p>
+                        <h2 className="u-margin-bottom-small medium-text">What is a {tumorData[tumorType].name}?</h2>
+                        {
+                          tumorData[tumorType].description.split("\n\n").map((para, index)=>(
+                            <p className="u-margin-bottom-small" key={index}>{para}</p>
+                          ))
+                        }
 
-              <h2 className="u-margin-bottom-small mt-10 medium-text">Symptoms</h2>
-              <p className="u-margin-bottom-small">{gliomaData.symptomsHeader}</p>
-              {
-                gliomaData.symptoms.map((item, index)=>(
-                  <li className="pl-5" key={index}>{item}</li>
-                ))
-              }
+                      <h2 className="u-margin-bottom-small mt-10 medium-text">Types</h2>
+                        {
+                          tumorData[tumorType].types.map((item, index)=>(
+                            <li className="pl-5" key={index}>{item}</li>
+                          ))
+                        }
+
+                        <h2 className="u-margin-bottom-small mt-10 medium-text">Symptoms</h2>
+                        <p className="u-margin-bottom-small">{tumorData[tumorType].symptomsHeader}</p>
+                        {
+                          tumorData[tumorType].symptoms.map((item, index)=>(
+                            <li className="pl-5" key={index}>{item}</li>
+                          ))
+                        }
+                   </>
+
+                }
+
               </div>
+              }
+              
             </div>
           </div>
 
