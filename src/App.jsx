@@ -11,6 +11,7 @@ import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
 import HowToPage from "./pages/HowToPage";
 import DetectPage from "./pages/DetectPage";
+import AnalysisPage from "./pages/AnalysisPage";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/" element={<OverviewPage />} />
         <Route path="/howto" element={<HowToPage />} />
         <Route path="/detect" element={<DetectPage />} />
+        <Route path="/analyze" element={<AnalysisPage />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/users" element={<UsersPage />} />
         <Route path="/sales" element={<SalesPage />} />

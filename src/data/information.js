@@ -13,7 +13,7 @@ export const gliomaData = {
     ],
     sources: [
         {
-         name: "Mayo clinic",
+         name: "Mayo Clinic",
          link: "https://www.mayoclinic.org/diseases-conditions/glioma/symptoms-causes/syc-20350251"
         }
     ]
@@ -38,7 +38,7 @@ const meningioma = {
     ],
     sources: [
         {
-         name: "Mayo clinic",
+         name: "Mayo Clinic",
          link: "https://www.mayoclinic.org/diseases-conditions/meningioma/symptoms-causes/syc-20355643"
         },
         {name: "Mount Sinai",
@@ -61,10 +61,66 @@ const pituitary = {
     ],
     sources: [
         {
-         name: "Mayo clinic",
+         name: "Mayo Clinic",
          link: "https://www.mayoclinic.org/diseases-conditions/pituitary-tumors/symptoms-causes/syc-20350548"
         }
     ]
+}
+
+const HGG = {
+    name: "High-Grade Glioma",
+    description:  `A glioma is a tumor that forms in specialized glial cells in the brain or spinal cord. These non-neuronal cells support, connect and protect neurons in the central and peripheral nervous systems. Based on the type of glial cell affected, a glioma may be classified as an astrocytoma, brain stem glioma, ependymoma, oligodendroglioma or optic pathway glioma.\n\nGliomas are more often cancerous than not. Cancerous gliomas are assigned a grade ranging from 1 through 4 based on their growth pattern and cellular appearance when viewed under a microscope. Grades 1 and 2 are low-grade gliomas, which usually grow slowly and can often be effectively treated. Grades 3 and 4 are high-grade gliomas, which tend to be more aggressive. If left untreated, a low-grade glioma can progress into a high-grade glioma.`,
+    causes: "Sometimes, high doses of radiation therapy can cause high-grade gliomas, but the reason for most high-grade gliomas in children is not known. Although doctors continue their research to understand what causes the tumors to occur, so far there have been few reliable findings. Genetic causes are rare, and these tumors are not believed to be linked to anything in the environment.",
+    symptoms: [
+        "Severe headaches",
+        "Seizures that are not easily controlled with medication",
+        "Progressive neurological deficits, such as loss of coordination",
+        "Personality or behavioral changes",
+        "Cognitive decline",
+        "Visual disturbances"
+    ],
+    sources: [
+        {
+         name: "Moffitt Cancer Center",
+         link: "https://www.moffitt.org/cancers/low-grade-glioma/symptoms/"
+        },
+        {
+            name: "Cincinnati Children's Hospital",
+            link: "https://www.cincinnatichildrens.org/health/h/high-grade-gliomas"
+        }
+    ]
+}
+
+const LGG = {
+    name: "Low-Grade Glioma",
+    description:  `A glioma is a tumor that forms in specialized glial cells in the brain or spinal cord. These non-neuronal cells support, connect and protect neurons in the central and peripheral nervous systems. Based on the type of glial cell affected, a glioma may be classified as an astrocytoma, brain stem glioma, ependymoma, oligodendroglioma or optic pathway glioma.\n\nGliomas are more often cancerous than not. Cancerous gliomas are assigned a grade ranging from 1 through 4 based on their growth pattern and cellular appearance when viewed under a microscope. Grades 1 and 2 are low-grade gliomas, which usually grow slowly and can often be effectively treated. Grades 3 and 4 are high-grade gliomas, which tend to be more aggressive. If left untreated, a low-grade glioma can progress into a high-grade glioma.`,
+    causes: "In general, we don’t know what causes low grade gliomas. If your brain has been exposed to radiation in the past, you may be more likely to develop a brain tumor. Scientists have looked at other possible causes such as aspartame (Nutrasweet), cell phones, and power lines, but no one has been able to show that any of these clearly cause brain tumors.",
+    symptoms: [
+        "Headaches",
+        "Loss of balance",
+        "Numbness or muscle weakness", 
+        "especially on one side of the body",
+        "Difficulty walking",
+        "Loss of peripheral vision",
+        "Difficulty speaking and understanding speech",
+        "Dizzy spells and seizures"
+    ],
+    sources: [
+        {
+         name: "Moffitt Cancer Center",
+         link: "https://www.moffitt.org/cancers/low-grade-glioma/symptoms/"
+        },
+        {
+            name: "University of Rochester Medical Center",
+            link: "https://www.urmc.rochester.edu/neurosurgery/services/brain-spinal-tumor/conditions/low-grade-glioma.aspx"
+        }
+    ]
+}
+
+
+export const gradesData = {
+    LGG,
+    HGG
 }
 
 export const tumorData = {

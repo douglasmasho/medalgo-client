@@ -12,9 +12,11 @@ import animation from "../assets/animation/loadingbrain.json";
 import PieChartCustom from "../components/charts/PieChartCustom";
 import BarGraphCustom from "../components/charts/BarGraphCustom";
 import { gliomaData, tumorData } from "../data/information";
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+registerPlugin(FilePondPluginFileValidateType);
 
 const iconStyle = {
   width: "100px",
@@ -76,6 +78,9 @@ const DetectPage = () => {
                   allowMultiple={false}
                   maxFiles={1}
                   name="files"
+                  acceptedFileTypes={['image/jpg', 'image/jpeg', 'image/png']}
+                  allowFileTypeValidation
+                  labelFileTypeNotAllowed
                   server={{
                     process: (
                       fieldName,
@@ -120,8 +125,8 @@ const DetectPage = () => {
                           setUrl(imgUrl);
                           setLoading(false)
                         } else {
-                          // Can call the error method if something is wrong, should exit after
                           error("oh no");
+                          setLoading(false)
                         }
                       };
 
@@ -152,7 +157,7 @@ const DetectPage = () => {
                       };
                     },
                   }}
-                  labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+                  labelIdle='Drag & Drop your file or <span class="filepond--label-action">Browse</span>'
                 />
               </div>
             </div>
