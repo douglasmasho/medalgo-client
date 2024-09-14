@@ -1,19 +1,15 @@
-<h1 align="center">React Admin Dashboard</h1>
-
-![Demo App](/public/screenshot-for-readme-1.png)
-![Demo App](/public/screenshot-for-readme-2.png)
-![Demo App](/public/screenshot-for-readme-3.png)
+<h1 align="center">Medalgo Dashboard</h1>
 
 [Video Tutorial on Youtube](https://youtu.be/gK0v_d91epk)
 
-### This is a free admin dashboard ui kit built with:
+### This was created using:
 
 -   React
 -   Tailwind CSS
 -   Recharts
 -   Framer Motion
-
-It is completely responsive and can be used for any type of web application.
+-   React Admin Dashboard UI Kit by [burakorkmez](https://github.com/burakorkmez) 
+-   NiiVue, an open-source WebGL 2.0 medical image viewer for visualization [niivue](https://github.com/niivue/niivue)
 
 ### Run this app locally
 
