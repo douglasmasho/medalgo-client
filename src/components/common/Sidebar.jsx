@@ -28,7 +28,7 @@ const SIDEBAR_ITEMS = [
   { name: "Dashboard", icon: LayoutDashboard, color: "#0094ff", href: "/" },
   { name: "Detect", icon: Search, color: "#0094ff", href: "/detect" },
   { name: "Analyze", icon: BrainCircuit, color: "#0094ff", href: "/analyze" },
-  { name: "Visualize", icon: View, color: "#0094ff", href: "/sales" },
+  { name: "Visualize", icon: View, color: "#0094ff", href: "/visualize" },
   { name: "Profile", icon: User, color: "#0094ff", href: "/profile" },
 
   // { name: "Orders", icon: ShoppingCart, color: "#0094ff", href: "/orders" },

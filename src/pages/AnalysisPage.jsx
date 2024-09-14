@@ -185,7 +185,7 @@ const DetectPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 1 }}
         >
-          <div className="grid grid-2 u-margin-bottom-medium">
+          <div className="u-margin-bottom-medium">
 
           <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700 p-5" style={{maxHeight: "400px", overflowY: "scroll", overflowX: "hidden"}}>
             <p className="">Information Panel</p>
@@ -235,12 +235,7 @@ const DetectPage = () => {
             </div>
 
 
-            
-            <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700 p-5">
-              <p className="">Visualization</p>
-
-              
-            </div>
+        
 
 
           </div>
