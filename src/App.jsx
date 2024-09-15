@@ -13,6 +13,9 @@ import HowToPage from "./pages/HowToPage";
 import DetectPage from "./pages/DetectPage";
 import AnalysisPage from "./pages/AnalysisPage";
 import VisualizePage from "./pages/VisualizePage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -31,6 +34,9 @@ function App() {
         <Route path="/detect" element={<DetectPage />} />
         <Route path="/analyze" element={<AnalysisPage />} />
         <Route path="/visualize" element={<VisualizePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/profile" element={<SettingsPage />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/users" element={<UsersPage />} />
         <Route path="/sales" element={<SalesPage />} />

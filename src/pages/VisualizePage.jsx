@@ -24,13 +24,14 @@ const iconStyle = {
 };
 
 
-const volumes = [
-  {url: './hgg.nii'},
-]
+// const volumes = 
 
 const VisualizePage = () => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [volumes, setVolumes] = useState([
+    {url: './hgg.nii'},
+  ])
 
   return (
     <div className="flex-1 overflow-auto relative z-10">

@@ -8,6 +8,7 @@ import UserGrowthChart from "../components/users/UserGrowthChart";
 import UserActivityHeatmap from "../components/users/UserActivityHeatmap";
 import UserDemographicsChart from "../components/users/UserDemographicsChart";
 import { Search, BrainCircuit, View, BadgeHelp } from "lucide-react";
+import { useAuth } from "../contexts/authContext";
 
 const userStats = {
 	totalUsers: 152845,
@@ -21,6 +22,8 @@ const iconStyle = {
 }
 
 const HowToPage = () => {
+	const {currentUser} = useAuth();
+	console.log(currentUser);
 	return (
 		<div className='flex-1 overflow-auto relative z-10'>
 			<Header title='Welcome to Medalgo' icon={<BadgeHelp style={{marginRight: "10px"}}/>}/>

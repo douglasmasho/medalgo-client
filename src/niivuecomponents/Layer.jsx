@@ -22,6 +22,17 @@ const grayscaleColorMap = [
   'rgb(255, 255, 255)'
 ];
 
+const infernoColorMap = [
+  'rgb(0, 0, 0)',         // Black
+  'rgb(35, 29, 36)',      // Dark purple
+  'rgb(78, 44, 75)',      // Dark red
+  'rgb(120, 74, 82)',     // Red
+  'rgb(160, 99, 69)',     // Orange
+  'rgb(205, 128, 51)',    // Yellow
+  'rgb(244, 209, 33)',    // Light yellow
+  'rgb(255, 255, 255)'    // White
+];
+
 const viridis = [
   '#440154', '#482777', '#3e4a89', '#31688e', '#26828e', '#1f9e89', '#35b779', '#6cce5e', '#b6e24a', '#f0f921'
 ];
@@ -47,7 +58,7 @@ export default function Layer(props) {
   let ArrowIcon = detailsOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />
   console.log(props.colorMapValues)
   console.log(image)
-  let allColors = viridis.map((colorName) => {
+  let allColors = grayscaleColorMap.map((colorName) => {
     return (
       <MenuItem value={colorName} key={colorName}>
 

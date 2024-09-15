@@ -65,16 +65,16 @@ export default function NiiVue(props) {
   // button or drag and drop
   React.useEffect(()=>{
     async function asyncFunc(){
-      // props.volumes.map(async (vol)=>{
-      //   let image = await NVImage.loadFromUrl({url:vol.url})
-      //   nv.addVolume(image)
-      //   setLayers([...nv.volumes])
-      // })
       await nv.loadVolumes(props.volumes)
+      console.log(layers);
       setLayers([...nv.volumes])
     }
 
-    asyncFunc()
+    asyncFunc();
+    return ()=>{
+      nv.loadVolumes([]);
+      setLayers([]);
+    }
   }, [])
 
   nv.opts.onImageLoaded = ()=>{
