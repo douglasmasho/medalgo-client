@@ -9,7 +9,8 @@ import { db, storage } from '../firebase/firebase'; // Import your Firebase conf
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Import Firebase storage functions
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
-
+import Lottie from "lottie-react";
+import animation from "../assets/animation/loadingcubes.json"
 
 function base64ToBlob(base64) {
 	const [metadata, base64String] = base64.split(',');
@@ -38,16 +39,21 @@ const EditProfilePage = () => {
 	const [src, setSrc] = useState("");
 	const [changingPic, setChangingPic] = useState(true);
 	const [userPic, setUserPic] = useState("");
+	const [loading, setLoading] = useState(false);
+	const [loading2, setLoading2] = useState(false);
 
 	const { userLoggedIn, currentUser } = useAuth();
 
 	const getProfilePic = async () => {
+		setLoading(true)
 		try {
 			const docSnap = await getDoc(doc(db, "users", currentUser.uid));
 			setUserPic(docSnap.data().profilePic);
 		} catch (e) {
 			console.log(e);
 			toast.error(e.code)
+		} finally {
+			setLoading(false)
 		}
 	}
 	useEffect(() => {
@@ -70,6 +76,7 @@ const EditProfilePage = () => {
 	}
 
 	const uploadFile = async () => {
+		setLoading2(true);
 		const uid = currentUser.uid;
 		console.log(uid);
 		const blob = base64ToBlob(preview);
@@ -94,6 +101,8 @@ const EditProfilePage = () => {
 			setPreview(null);
 		} catch (error) {
 			console.error('Upload failed', error);
+		}finally{
+		setLoading2(false);
 		}
 	};
 
@@ -105,67 +114,78 @@ const EditProfilePage = () => {
 					<Header title='Edit Profile' icon={<UserRoundPen className="mr-2" />} />
 					<main className='max-w-4xl mx-auto py-6 px-4 lg:px-8'>
 						<SettingSection icon={User} title={"Profile Picture"}>
-							<div className='flex flex-col sm:flex-row items-center mb-6 center-hrz--col'>
-								<img
-									src={userPic}
-									alt='Profile'
-									className='rounded-full  object-cover mr-4 mb-5'
-									style={{ width: "200px" }}
-								/>
-								{
-									changingPic ?
-										null :
-										<button className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mr-5' onClick={() => {
-											setChangingPic(true);
-										}}>
-											Change Profile Picture
-										</button>
-								}
+							{
+								loading ?
+									<div className="u-center-hrz">
+										<Lottie animationData={animation} style={{ width: "500px" }} />
+									</div> :
+									<div className='flex flex-col sm:flex-row items-center mb-6 center-hrz--col'>
+										<img
+											src={userPic}
+											alt='Profile'
+											className='rounded-full  object-cover mr-4 mb-5'
+											style={{ width: "200px" }}
+										/>
+										{
+											changingPic ?
+												null :
+												<button className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mr-5' onClick={() => {
+													setChangingPic(true);
+												}}>
+													Change Profile Picture
+												</button>
+										}
 
-							</div>
+									</div>
+							}
+
 
 
 						</SettingSection>
 						{
-							changingPic ?
-								<SettingSection icon={User} title={"Choose Profile Picture"}>
-									<button className='u-margin-bottom bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mr-5' onClick={() => {
-										setChangingPic(false);
-										setPreview(null)
-									}}>
-										Cancel
-									</button>
-
-									<div style={{ display: "flex", justifyContent: "space-around" }}>
-										<div className="mr-10">
-											<Avatar
-												width={300}
-												height={300}
-												onCrop={onCrop}
-												onClose={onClose}
-												onBeforeFileLoad={onBeforeFileLoad}
-												src=""
-											/>
-										</div>
-
-										<div style={{ width: "300px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-											{
-												preview ?
-													<img src={preview} alt="Preview" /> :
-													<div style={{ width: "100%", height: "100%", backgroundColor: "black" }}>
-
-													</div>
-											}
-										</div>
-									</div>
-									<div className="u-center-hrz">
-										<button className='u-margin-bottom u-margin-top bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mr-5' onClick={uploadFile}>
-											Change Profile Picture
+							loading2 ?
+								<div className="u-center-hrz">
+									<Lottie animationData={animation} style={{ width: "500px" }} />
+								</div> :
+								changingPic ?
+									<SettingSection icon={User} title={"Choose Profile Picture"}>
+										<button className='u-margin-bottom bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mr-5' onClick={() => {
+											setChangingPic(false);
+											setPreview(null)
+										}}>
+											Cancel
 										</button>
-									</div>
+
+										<div style={{ display: "flex", justifyContent: "space-around" }}>
+											<div className="mr-10">
+												<Avatar
+													width={300}
+													height={300}
+													onCrop={onCrop}
+													onClose={onClose}
+													onBeforeFileLoad={onBeforeFileLoad}
+													src=""
+												/>
+											</div>
+
+											<div style={{ width: "300px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+												{
+													preview ?
+														<img src={preview} alt="Preview" /> :
+														<div style={{ width: "100%", height: "100%", backgroundColor: "black" }}>
+
+														</div>
+												}
+											</div>
+										</div>
+										<div className="u-center-hrz">
+											<button className='u-margin-bottom u-margin-top bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mr-5' onClick={uploadFile}>
+												Change Profile Picture
+											</button>
+										</div>
 
 
-								</SettingSection> : null
+									</SettingSection> : null
 						}
 
 					</main>
