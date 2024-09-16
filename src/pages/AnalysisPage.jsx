@@ -13,6 +13,9 @@ import PieChartCustom from "../components/charts/PieChartCustom";
 import BarGraphCustom from "../components/charts/BarGraphCustom";
 import { gradesData } from "../data/information";
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import { useAuth } from "../contexts/authContext/index";
+import { Navigate } from "react-router-dom";
+
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -22,30 +25,19 @@ const iconStyle = {
   width: "100px",
 };
 
-const convertToData = (object) => {
-  const labelArr = [];
-  const dataArr = []
-  for (const x in object) {
-    labelArr.push(x);
-    dataArr.push(object[x])
-  }
-  return ({
-    labels: ["Glioma", "Meningioma", "No Tumor", "Pituitary"],
-    datasets: [{
-      label: "",
-      data: dataArr,
-      backgroundColor: "#0094ff"
-    }]
-  })
-};
 
-const DetectPage = () => {
+const AnalysisPage = () => {
   const [files, setFiles] = useState([]);
   const [predictedClass, setPredictedClass] = useState("");
   const [loading, setLoading] = useState(false);
 
+	const { userLoggedIn } = useAuth();
+
+
   return (
     <div className="flex-1 overflow-auto relative z-10">
+			{!userLoggedIn ? (<Navigate to="/login" replace={true} />) :
+<>
       <Header
         title="Analyze"
         icon={<BrainCircuit style={{ marginRight: "10px" }} />}
@@ -243,7 +235,11 @@ const DetectPage = () => {
 
         </motion.div>
       </main>
+</> }
+
+
+
     </div>
   );
 };
-export default DetectPage;
+export default AnalysisPage;

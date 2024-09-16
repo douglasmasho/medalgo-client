@@ -256,3 +256,9 @@
 .u-nomargin{
   margin:0 !important;
 }
+
+.u-center-hrz{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}

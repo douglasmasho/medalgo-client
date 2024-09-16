@@ -1,7 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-
 import Sidebar from "./components/common/Sidebar";
-
 import OverviewPage from "./pages/OverviewPage";
 import ProductsPage from "./pages/ProductsPage";
 import UsersPage from "./pages/UsersPage";
@@ -15,11 +13,14 @@ import AnalysisPage from "./pages/AnalysisPage";
 import VisualizePage from "./pages/VisualizePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import ProfilePage from "./pages/ProfilePage";
+import toast, { Toaster } from 'react-hot-toast';
+import EditProfilePage from "./pages/EditProfilePage";
 
 function App() {
   return (
+
     <div className="flex h-screen bg-gray-900 text-gray-100 overflow-hidden">
+      <Toaster />
       {/* BG */}
 
       <div className="fixed inset-0 z-0">
@@ -37,6 +38,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/profile" element={<SettingsPage />} />
+        <Route path="/editprofile" element={<EditProfilePage />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/users" element={<UsersPage />} />
         <Route path="/sales" element={<SalesPage />} />
@@ -44,7 +46,10 @@ function App() {
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Routes>
+     
     </div>
+
+
   );
 }
 

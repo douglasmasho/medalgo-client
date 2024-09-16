@@ -35,7 +35,8 @@ const Register = () => {
                 email,
                 role,
                 organization,
-                uid
+                uid,
+                profilePic: ""
             })
             }catch(e){
                 console.log(e);

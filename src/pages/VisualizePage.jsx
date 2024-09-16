@@ -14,6 +14,8 @@ import PieChartCustom from "../components/charts/PieChartCustom";
 import BarGraphCustom from "../components/charts/BarGraphCustom";
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import NiiVue from "../Niivue";
+import { useAuth } from "../contexts/authContext/index";
+import { Navigate } from "react-router-dom";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -27,29 +29,36 @@ const iconStyle = {
 // const volumes = 
 
 const VisualizePage = () => {
+
+  const { userLoggedIn } = useAuth();
+
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [volumes, setVolumes] = useState([
-    {url: './hgg.nii'},
+    { url: './hgg.nii' },
   ])
 
   return (
     <div className="flex-1 overflow-auto relative z-10">
-      <Header
-        title="Visualize"
-        icon={<View style={{ marginRight: "10px" }} />}
-      />
+      {!userLoggedIn ? (<Navigate to="/login" replace={true} />) :
+        <>
+          <Header
+            title="Visualize"
+            icon={<View style={{ marginRight: "10px" }} />}
+          />
 
-      <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
-        <motion.div
-          className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 1 }}
-        >
-         <NiiVue volumes={volumes}/>
-        </motion.div>
-      </main>
+          <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
+            <motion.div
+              className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 1 }}
+            >
+              <NiiVue volumes={volumes} />
+            </motion.div>
+          </main>
+        </>
+      }
 
 
     </div>

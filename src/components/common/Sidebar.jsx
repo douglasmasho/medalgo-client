@@ -33,7 +33,7 @@ const SIDEBAR_ITEMS = [
 
   // { name: "Orders", icon: ShoppingCart, color: "#0094ff", href: "/orders" },
   // { name: "Analytics", icon: TrendingUp, color: "#0094ff", href: "/analytics" },
-  { name: "Settings", icon: Settings, color: "#0094ff", href: "/settings" },
+  // { name: "Settings", icon: Settings, color: "#0094ff", href: "/settings" },
 ];
 
 const Sidebar = () => {
