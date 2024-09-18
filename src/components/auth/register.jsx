@@ -29,6 +29,7 @@ const Register = () => {
             try{
             const userCredential = await doCreateUserWithEmailAndPassword(email, password);
             const uid = userCredential.user.uid;
+            console.log("work")
             await setDoc(doc(db, "users", uid), {
                 title,
                 fullName,
@@ -37,7 +38,7 @@ const Register = () => {
                 organization,
                 uid,
                 profilePic: "https://i.ibb.co/z6xFjgk/defaultpic.png",
-                practiceNumber: ""
+                practiceNumber: practiceNumber
             })
             }catch(e){
                 console.log(e);

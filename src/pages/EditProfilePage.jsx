@@ -37,7 +37,7 @@ function base64ToBlob(base64) {
 const EditProfilePage = () => {
 	const [preview, setPreview] = useState(null);
 	const [src, setSrc] = useState("");
-	const [changingPic, setChangingPic] = useState(true);
+	const [changingPic, setChangingPic] = useState(false);
 	const [userPic, setUserPic] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [loading2, setLoading2] = useState(false);
