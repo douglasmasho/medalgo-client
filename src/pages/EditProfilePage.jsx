@@ -91,6 +91,7 @@ const EditProfilePage = () => {
 	}
 
 	const onBeforeFileLoad = (elem) => {
+		console.log(elem.target.files[0]);
 		// if (elem.target.files[0].size > 71680) {
 		// 	alert("File is too big!");
 		// 	elem.target.value = "";
@@ -207,6 +208,7 @@ const EditProfilePage = () => {
 													onCrop={onCrop}
 													onClose={onClose}
 													onBeforeFileLoad={onBeforeFileLoad}
+													mimeTypes="image/jpeg,image/png"
 													src=""
 												/>
 											</div>

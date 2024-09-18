@@ -15,6 +15,7 @@ const Profile = () => {
 	const [userPic, setUserPic] = useState("");
 	const { currentUser } = useAuth();
 	const [fullName, setFullName] = useState("");
+	const [title, setTitle] = useState("")
 	const [email, setEmail] = useState("")
 	const [role, setRole] = useState("");
 	const [organization, setOrganization] = useState("");
@@ -29,6 +30,7 @@ const Profile = () => {
 			setUserPic(userObj.profilePic);
 			setFullName(userObj.fullName);
 			setEmail(userObj.email);
+			setTitle(userObj.title);
 			setOrganization(userObj.organization);
 			
 		} catch (e) {
@@ -69,7 +71,7 @@ const Profile = () => {
 							/>
 
 							<div>
-								<h3 className='text-lg font-semibold text-gray-100'>{fullName}</h3>
+								<h3 className='text-lg font-semibold text-gray-100'>{title} {fullName}</h3>
 								<p className='text-gray-400'>{email}</p>
 							</div>
 						</div>
