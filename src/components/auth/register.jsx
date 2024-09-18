@@ -36,7 +36,8 @@ const Register = () => {
                 role,
                 organization,
                 uid,
-                profilePic: ""
+                profilePic: "https://i.ibb.co/z6xFjgk/defaultpic.png",
+                practiceNumber: ""
             })
             }catch(e){
                 console.log(e);

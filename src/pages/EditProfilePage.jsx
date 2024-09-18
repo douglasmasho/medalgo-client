@@ -41,21 +41,43 @@ const EditProfilePage = () => {
 	const [userPic, setUserPic] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [loading2, setLoading2] = useState(false);
+	const [loading3, setLoading3] = useState(false);
+	const [email, setEmail] = useState("");
+	const [title, setTitle] = useState("");
+	const [fullName, setFullName] = useState("");
+	const [role, setRole] = useState("");
+	const [organization,setOrganization] = useState("");
+	const [practiceNumber, setPracticeNumber] = useState("");
+
+
 
 	const { userLoggedIn, currentUser } = useAuth();
 
 	const getProfilePic = async () => {
-		setLoading(true)
+		setLoading(true);
+		setLoading3(true);
+
 		try {
 			const docSnap = await getDoc(doc(db, "users", currentUser.uid));
-			setUserPic(docSnap.data().profilePic);
+			const user = docSnap.data();
+			setUserPic(user.profilePic);
+			setTitle(user.title);
+			setFullName(user.fullName);
+			setRole(user.role);
+			setOrganization(user.organization);
+			setPracticeNumber(user.practiceNumber);
+			setEmail(user.email)
 		} catch (e) {
 			console.log(e);
 			toast.error(e.code)
 		} finally {
-			setLoading(false)
+			setLoading(false);
+		setLoading3(false);
 		}
 	}
+
+
+
 	useEffect(() => {
 		getProfilePic();
 	}, [])
@@ -92,19 +114,40 @@ const EditProfilePage = () => {
 			await uploadBytes(storageRef, blob);
 			console.log('Upload successful');
 			const downloadURL = await getDownloadURL(storageRef);
+			setUserPic(downloadURL);
 			await updateDoc(doc(db, "users", uid), {
 				profilePic: downloadURL
 			})
-			const docSnap = await getDoc(doc(db, "users", currentUser.uid));
-			setUserPic(docSnap.data().profilePic);
 			setChangingPic(false);
 			setPreview(null);
 		} catch (error) {
 			console.error('Upload failed', error);
+			toast.error(error.code)
 		}finally{
 		setLoading2(false);
 		}
 	};
+
+
+	const onSubmit = async(e)=>{
+		e.preventDefault()
+		setLoading3(true);
+		try{
+			await updateDoc(doc(db, "users", currentUser.uid), {
+				email,
+				title,
+				fullName,
+				role,
+				organization,
+				practiceNumber
+			})
+		}catch(e){
+			toast.error(e.code);
+			console.log(e)
+		}finally{
+		setLoading3(false);
+		}
+	}
 
 
 	return (
@@ -187,7 +230,105 @@ const EditProfilePage = () => {
 
 									</SettingSection> : null
 						}
+						<SettingSection icon={User} title={"Change Personal Information"}>
+							{
+							loading3 ? 
+							<div className="u-center-hrz">
+									<Lottie animationData={animation} style={{ width: "500px" }} />
+								</div> : 
+							<>
+							    <form
+								onSubmit={onSubmit}
+								className="space-y-4 white-text"
+								style={{width: "90%"}}
+									>
+								<div>
+									<label className="text-sm white-text font-bold">
+										Title
+									</label>
+									<input
+										type="text"
 
+										autoComplete='title'
+										required
+										value={title} onChange={(e) => { setTitle(e.target.value) }}
+										className="w-full mt-2 px-3 py-2 white-text bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300"
+									/>
+								</div>
+								<div>
+									<label className="text-sm white-text font-bold">
+										Full Name
+									</label>
+									<input
+										type="text"
+										autoComplete='full-name'
+										required
+										value={fullName} onChange={(e) => { setFullName(e.target.value) }}
+										className="w-full mt-2 px-3 py-2 white-text bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300"
+									/>
+								</div>
+								<div>
+									<label className="text-sm white-text font-bold">
+										Role
+									</label>
+									<select
+										required
+										value={role}
+										onChange={(e) => { setRole(e.target.value) }}
+										className="w-full mt-2 px-3 py-2 white-text bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300"
+									>
+										<option value="" disabled>Select an option</option>
+										<option value="medical" className='black-text'>Medical Professional</option>
+										<option value="research" className='black-text'>Researcher</option>
+									</select>
+								</div>
+								<div>
+									<label className="text-sm white-text font-bold">
+										Organization / Institution
+									</label>
+									<input
+										type="text"
+										autoComplete='organization'
+										required
+										value={organization} onChange={(e) => { setOrganization(e.target.value) }}
+										className="w-full mt-2 px-3 py-2 white-text bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300"
+									/>
+								</div>
+								{
+									role === "medical" ?
+									<div>
+									<label className="text-sm white-text font-bold">
+										Practice Number
+									</label>
+									<input
+										type="text"
+										autoComplete='practice-number'
+										required
+										value={practiceNumber} onChange={(e) => { setPracticeNumber(e.target.value) }}
+										className="w-full mt-2 px-3 py-2 white-text bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300"
+									/>
+									</div>: null
+								}
+								<div>
+									<label className="text-sm white-text font-bold">
+										Email
+									</label>
+									<input
+										type="email"
+										autoComplete='email'
+										required
+										value={email} onChange={(e) => { setEmail(e.target.value) }}
+										className="w-full mt-2 px-3 py-2 white-text bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300"
+									/>
+								</div>
+
+								<button className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mr-5'>
+								   Change Profile Details
+								</button>
+								</form>			
+							</>
+}
+						</SettingSection>
 					</main>
 				</>
 			}
