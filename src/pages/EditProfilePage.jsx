@@ -208,7 +208,7 @@ const EditProfilePage = () => {
 													onCrop={onCrop}
 													onClose={onClose}
 													onBeforeFileLoad={onBeforeFileLoad}
-													mimeTypes="image/jpeg,image/png"
+													mimeTypes="image/png"
 													src=""
 												/>
 											</div>

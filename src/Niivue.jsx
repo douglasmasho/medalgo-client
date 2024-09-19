@@ -152,6 +152,8 @@ export default function NiiVue(props) {
     nv.drawScene()
   }
 
+  
+
   function nvUpdateRulerWidth(v){
     nv.opts.rulerWidth = v
     setRulerWidth(v)

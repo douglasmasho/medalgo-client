@@ -35,7 +35,7 @@ const VisualizePage = () => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [volumes, setVolumes] = useState([
-    { url: './hgg.nii' },
+    { url: './lgg.nii' },
   ])
 
   return (
