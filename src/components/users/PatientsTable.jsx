@@ -3,14 +3,14 @@ import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 
 const userData = [
-	{ id: 1, name: "John Doe", email: "john@example.com", role: "Customer", status: "Active" },
-	{ id: 2, name: "Jane Smith", email: "jane@example.com", role: "Admin", status: "Active" },
-	{ id: 3, name: "Bob Johnson", email: "bob@example.com", role: "Customer", status: "Inactive" },
-	{ id: 4, name: "Alice Brown", email: "alice@example.com", role: "Customer", status: "Active" },
-	{ id: 5, name: "Charlie Wilson", email: "charlie@example.com", role: "Moderator", status: "Active" },
+	{ id: 1, name: "John Doe", age: 80, gender: "Male", status: "Active" },
+	{ id: 2, name: "Jane Smith", age: 92, gender: "Female", status: "Active" },
+	{ id: 3, name: "Bob Johnson", age: 84, gender: "Female", status: "Inactive" },
+	{ id: 4, name: "Alice Brown", age: 106, gender: "Male", status: "Active" },
+	{ id: 5, name: "Charlie Wilson", age: 50, gender: "Female", status: "Active" },
 ];
 
-const UsersTable = () => {
+const PatientsTable = () => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filteredUsers, setFilteredUsers] = useState(userData);
 
@@ -18,7 +18,7 @@ const UsersTable = () => {
 		const term = e.target.value.toLowerCase();
 		setSearchTerm(term);
 		const filtered = userData.filter(
-			(user) => user.name.toLowerCase().includes(term) || user.email.toLowerCase().includes(term)
+			(user) => user.name.toLowerCase().includes(term)
 		);
 		setFilteredUsers(filtered);
 	};
@@ -52,13 +52,13 @@ const UsersTable = () => {
 								Name
 							</th>
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
-								Email
+								Age
 							</th>
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
-								Role
+								Gender
 							</th>
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
-								Status
+								Last Diagnosis
 							</th>
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
 								Actions
@@ -88,11 +88,11 @@ const UsersTable = () => {
 								</td>
 
 								<td className='px-6 py-4 whitespace-nowrap'>
-									<div className='text-sm text-gray-300'>{user.email}</div>
+									<div className='text-sm text-gray-300'>{user.age}</div>
 								</td>
 								<td className='px-6 py-4 whitespace-nowrap'>
 									<span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-800 text-blue-100'>
-										{user.role}
+										{user.gender}
 									</span>
 								</td>
 
@@ -120,4 +120,4 @@ const UsersTable = () => {
 		</motion.div>
 	);
 };
-export default UsersTable;
+export default PatientsTable;

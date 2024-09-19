@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 import Header from "../components/common/Header";
 import StatCard from "../components/common/StatCard";
-import UsersTable from "../components/users/UsersTable";
+import PatientsTable from "../components/users/PatientsTable";
 import UserGrowthChart from "../components/users/UserGrowthChart";
 import UserActivityHeatmap from "../components/users/UserActivityHeatmap";
 import UserDemographicsChart from "../components/users/UserDemographicsChart";
@@ -44,7 +44,7 @@ const UsersPage = () => {
 					<StatCard name='Churn Rate' icon={UserX} value={userStats.churnRate} color='#EF4444' />
 				</motion.div>
 
-				<UsersTable />
+				<PatientsTable />
 
 				{/* USER CHARTS */}
 				<div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8'>

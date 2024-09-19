@@ -9,12 +9,13 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import Lottie from "lottie-react";
 import animation from "../assets/animation/loadingbrain.json";
-import PieChartCustom from "../components/charts/PieChartCustom";
 import BarGraphCustom from "../components/charts/BarGraphCustom";
-import { gliomaData, tumorData } from "../data/information";
+import { tumorData } from "../data/information";
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import { useAuth } from "../contexts/authContext/index";
 import { Navigate } from "react-router-dom";
+import { db } from "../firebase/firebase";
+import { addDoc, setDoc, doc  } from "firebase/firestore";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -43,7 +44,7 @@ const convertToData = (object) => {
 
 const DetectPage = () => {
   const [files, setFiles] = useState([]);
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState("https://randomuser.me/api/portraits/lego/3.jpg");
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const [classifyRes, setClassifyRes] = useState(null);
@@ -51,6 +52,10 @@ const DetectPage = () => {
   const [data, setData] = useState(tumorData.pituitary);
 
   const { userLoggedIn } = useAuth();
+
+  const addDiagnosis = async()=>{
+
+  }
 
   return (
     <div className="flex-1 overflow-auto relative z-10">

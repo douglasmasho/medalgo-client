@@ -15,8 +15,10 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import toast, { Toaster } from 'react-hot-toast';
 import EditProfilePage from "./pages/EditProfilePage";
+import { useEffect } from "react";
 
 function App() {
+
   return (
 
     <div className="flex h-screen bg-gray-900 text-gray-100 overflow-hidden">

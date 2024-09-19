@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 
 import { motion } from "framer-motion";
 import Header from "../components/common/Header";
@@ -31,12 +31,11 @@ const iconStyle = {
 const VisualizePage = () => {
 
   const { userLoggedIn } = useAuth();
-
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [volumes, setVolumes] = useState([
-    { url: './lgg.nii' },
-  ])
+  const [volumes, setVolumes] = useState([{ url: './hgg.nii' }]);
+
+  // const volumes = useMemo(()=>([{url: "./lgg.nii"}]))
 
   return (
     <div className="flex-1 overflow-auto relative z-10">

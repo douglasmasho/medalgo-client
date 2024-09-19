@@ -38,7 +38,6 @@ export default function NiiVue(props) {
   const [worldSpace, setWorldSpace] = React.useState(nv.opts.isSliceMM)
   const [clipPlane, setClipPlane] = React.useState(nv.currentClipPlaneIndex > 0 ? true : false)
   // TODO: add crosshair size state and setter
-  console.log(nv.opts)
   const [crosshairOpacity, setCrosshairOpacity] = React.useState(nv.opts.crosshairColor[3])
   const [clipPlaneOpacity, setClipPlaneOpacity] = React.useState(1)
   const [locationTableVisible, setLocationTableVisible] = React.useState(true)
@@ -63,13 +62,15 @@ export default function NiiVue(props) {
   //
   // All subsequent imgaes should be added via a
   // button or drag and drop
-  React.useEffect(()=>{
-    async function asyncFunc(){
-      await nv.loadVolumes(props.volumes)
-      console.log(layers);
-      setLayers([...nv.volumes])
-    }
 
+
+  const asyncFunc =async()=>{
+    await nv.loadVolumes(props.volumes)
+    console.log(layers);
+    setLayers([...nv.volumes])
+  }
+
+  React.useEffect(()=>{
     asyncFunc();
     return ()=>{
       nv.loadVolumes([]);
@@ -151,8 +152,6 @@ export default function NiiVue(props) {
     setSagittalNoseLeft(!sagittalNoseLeft)
     nv.drawScene()
   }
-
-  
 
   function nvUpdateRulerWidth(v){
     nv.opts.rulerWidth = v
@@ -556,11 +555,6 @@ export default function NiiVue(props) {
         volumes={layers}
       >
       </NiivuePanel>
-      {/* <LocationTable 
-        tableData={locationData} 
-        isVisible={locationTableVisible}
-        decimalPrecision={decimalPrecision}
-      /> */}
     </Box>
   )
 }
