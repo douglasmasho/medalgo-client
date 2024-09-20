@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search } from "lucide-react";
-
+import { Search, Eye, Plus } from "lucide-react";
+import 'react-responsive-modal/styles.css';
+import { Modal } from 'react-responsive-modal';
 const userData = [
 	{ id: 1, name: "John Doe", age: 80, gender: "Male", status: "Active" },
 	{ id: 2, name: "Jane Smith", age: 92, gender: "Female", status: "Active" },
@@ -10,9 +11,26 @@ const userData = [
 	{ id: 5, name: "Charlie Wilson", age: 50, gender: "Female", status: "Active" },
 ];
 
+const customStyles = {
+	content: {
+	  top: '50%',
+	  left: '50%',
+	  right: 'auto',
+	  bottom: 'auto',
+	  marginRight: '-50%',
+	  transform: 'translate(-50%, -50%)',
+	},
+  };
+  
+
 const PatientsTable = () => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filteredUsers, setFilteredUsers] = useState(userData);
+
+	const [open, setOpen] = useState(false);
+
+	const onOpenModal = () => setOpen(true);
+	const onCloseModal = () => setOpen(false);
 
 	const handleSearch = (e) => {
 		const term = e.target.value.toLowerCase();
@@ -31,17 +49,21 @@ const PatientsTable = () => {
 			transition={{ delay: 0.2 }}
 		>
 			<div className='flex justify-between items-center mb-6'>
-				<h2 className='text-xl font-semibold text-gray-100'>Users</h2>
+				<h2 className='text-xl font-semibold text-gray-100'>Patients</h2>
+				<div style={{display: "flex"}}>
+				<motion.button className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mr-5' whileHover={{scale: 1.05}} whileTap={{scale: 0.9}} onClick={onOpenModal}><Plus />Add Patient</motion.button>
 				<div className='relative'>
+				<Search className='absolute left-3 top-2.5 text-gray-400' size={18} />
 					<input
 						type='text'
-						placeholder='Search users...'
+						placeholder='Search patients...'
 						className='bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
 						value={searchTerm}
 						onChange={handleSearch}
 					/>
-					<Search className='absolute left-3 top-2.5 text-gray-400' size={18} />
 				</div>
+				</div>
+
 			</div>
 
 			<div className='overflow-x-auto'>
@@ -61,7 +83,7 @@ const PatientsTable = () => {
 								Last Diagnosis
 							</th>
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
-								Actions
+								View Patient
 							</th>
 						</tr>
 					</thead>
@@ -108,15 +130,22 @@ const PatientsTable = () => {
 									</span>
 								</td>
 
-								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-									<button className='text-indigo-400 hover:text-indigo-300 mr-2'>Edit</button>
-									<button className='text-red-400 hover:text-red-300'>Delete</button>
+								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300 u-v'>
+								   <Eye style={{cursor: "pointer"}}/>
 								</td>
 							</motion.tr>
 						))}
 					</tbody>
 				</table>
 			</div>
+			<Modal open={open} onClose={onCloseModal} center>
+        <h2>Simple centered modal</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+          pulvinar risus non risus hendrerit venenatis. Pellentesque sit amet
+          hendrerit risus, sed porttitor quam.
+        </p>
+      </Modal>
 		</motion.div>
 	);
 };
