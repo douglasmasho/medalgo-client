@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Header from "../components/common/Header";
-import { Search, Brain } from "lucide-react";
+import { Search, Brain, CircleX } from "lucide-react";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
@@ -16,6 +16,8 @@ import { useAuth } from "../contexts/authContext/index";
 import { Navigate } from "react-router-dom";
 import { db } from "../firebase/firebase";
 import { addDoc, setDoc, doc  } from "firebase/firestore";
+import { Modal } from 'react-responsive-modal';
+import PatientsTable2 from "../components/users/PatientsTable2";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -49,17 +51,25 @@ const DetectPage = () => {
   const [loading2, setLoading2] = useState(false);
   const [classifyRes, setClassifyRes] = useState(null);
   const [tumorType, setTumorType] = useState("");
-  // const [data, setData] = useState(tumorData.pituitary);
+	const [open, setOpen] = useState(false);
+	const [loggedInUser, setLoggedInUser] = useState(null);
+
+  useEffect(()=>{
+		setLoggedInUser(JSON.parse(localStorage.getItem("currentUser")))
+	}, [])
+  
+  const onOpenModal = () => setOpen(true);
+	const onCloseModal = () => setOpen(false);
 
   const { userLoggedIn } = useAuth();
 
   const addDiagnosis = async()=>{
-
+    
   }
 
   return (
     <div className="flex-1 overflow-auto relative z-10">
-      {!userLoggedIn ? (<Navigate to="/login" replace={true} />) :
+      {!userLoggedIn && !loggedInUser ? (<Navigate to="/login" replace={true} />) :
         <>
           <Header
             title="Detect"
@@ -193,9 +203,13 @@ const DetectPage = () => {
                             <button className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mx-5'>
                               Download Image
                             </button>
-                            <button className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mx-5'>
+                            {
+                              loggedInUser?.role === "medical" ?
+                              <button className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mx-5' onClick={onOpenModal}>
                               Save to Patient
-                            </button>
+                            </button> : null
+                            }
+                            
                           </div>
 
                         </div>
@@ -302,7 +316,19 @@ const DetectPage = () => {
         </>
       }
 
-
+    <Modal open={open} onClose={onCloseModal} center classNames={{
+          modal: "bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700",
+        }}
+        styles={{
+          modal: {
+            // width: "80%"
+          }
+        }}
+        closeIcon={<CircleX style={{color: "white"}}/>}
+        >
+      <h2 className="text-2xl font-semibold text-gray-100 u-margin-bottom-small">Choose Patient</h2>
+      <PatientsTable2/>
+    </Modal>
     </div>
   );
 };

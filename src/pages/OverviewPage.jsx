@@ -13,7 +13,7 @@ import PatientsTable from "../components/users/PatientsTable";
 
 const OverviewPage = () => {
 	const { userLoggedIn, currentUser } = useAuth();
-	const [loggedInUser, setLoggedInUser] = useState();
+	const [loggedInUser, setLoggedInUser] = useState(null);
 
 	useEffect(()=>{
 		setLoggedInUser(JSON.parse(localStorage.getItem("currentUser")))

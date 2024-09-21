@@ -23,7 +23,7 @@ const customStyles = {
   };
   
 
-const PatientsTable = () => {
+const PatientsTabl2 = () => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filteredUsers, setFilteredUsers] = useState([]);
 	const [allPatients, setAllPatients] = useState([]);
@@ -31,9 +31,6 @@ const PatientsTable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const {currentUser} = useAuth()
-
-	const onOpenModal = () => setOpen(true);
-	const onCloseModal = () => setOpen(false);
 
 	const handleSearch = (e) => {
 		const term = e.target.value.toLowerCase();
@@ -101,7 +98,7 @@ const PatientsTable = () => {
         </div> : 
 
 		<motion.div
-		className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700'
+		className=' bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700'
 		initial={{ opacity: 0, y: 20 }}
 		animate={{ opacity: 1, y: 0 }}
 		transition={{ delay: 0.2 }}
@@ -109,7 +106,6 @@ const PatientsTable = () => {
 		<div className='flex justify-between items-center mb-6'>
 			<h2 className='text-xl font-semibold text-gray-100'>Patients</h2>
 			<div style={{display: "flex"}}>
-			<motion.button className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mr-5' style={{display: "flex", alignItems: "center"}} whileHover={{scale: 1.05}} whileTap={{scale: 0.9}} onClick={onOpenModal} ><Plus class="mr-2"/>Add Patient</motion.button>
 			<div className='relative'>
 			<Search className='absolute left-3 top-2.5 text-gray-400' size={18} />
 				<input
@@ -141,7 +137,7 @@ const PatientsTable = () => {
 							Last Diagnosis
 						</th>
 						<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
-							View Patient
+							Add to Patient
 						</th>
 					</tr>
 				</thead>
@@ -176,35 +172,24 @@ const PatientsTable = () => {
 								</span>
 							</td>
 
-							<td className='px-6 py-4 whitespace-nowrap'>
+							<td className='px-6 py-4 whitespace-nowrap white-text'>
 								{user.lastDiagnosis ? moment(user.lastDiagnosis).format('Do MMMM YYYY, h:mm:ss a') : "Not yet diagnosed"}
 							</td>
 
 							<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300 u-v'>
-							   <Eye style={{cursor: "pointer"}}/>
+                            <button className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mx-5'>
+                              <Plus/>
+                            </button>
 							</td>
 						</motion.tr>
 					))}
 				</tbody>
 			</table>
 		</div>
-		<Modal open={open} onClose={onCloseModal} center classNames={{
-			modal: "bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700",
-		}}
-		styles={{
-			modal: {
-				width: "80%"
-			}
-		}}
-		closeIcon={<CircleX style={{color: "white"}}/>}
-		>
-	<h2 className="text-2xl font-semibold text-gray-100">Add Patient</h2>
-	<AddPatientForm closeModal={onCloseModal} getPatients={getPatients}/>
-        </Modal>
 	</motion.div>
 		}
 		</>
 
 	);
 };
-export default PatientsTable;
+export default PatientsTabl2;
