@@ -49,7 +49,7 @@ const DetectPage = () => {
   const [loading2, setLoading2] = useState(false);
   const [classifyRes, setClassifyRes] = useState(null);
   const [tumorType, setTumorType] = useState("");
-  const [data, setData] = useState(tumorData.pituitary);
+  // const [data, setData] = useState(tumorData.pituitary);
 
   const { userLoggedIn } = useAuth();
 

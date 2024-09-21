@@ -31,6 +31,7 @@ const Profile = () => {
 			setFullName(userObj.fullName);
 			setEmail(userObj.email);
 			setTitle(userObj.title);
+			setRole(userObj.role)
 			setOrganization(userObj.organization);
 			
 		} catch (e) {
@@ -44,9 +45,6 @@ const Profile = () => {
 	useEffect(() => {
 		getProfileDetails();
 	}, [])
-
-
-
 
 	const signOut = async () => {
 		try {

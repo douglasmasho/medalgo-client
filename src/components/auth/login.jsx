@@ -3,6 +3,7 @@ import { Navigate, Link } from 'react-router-dom';
 import {useAuth} from "../../contexts/authContext/index";
 import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../../firebase/auth';
 import toast, { Toaster } from 'react-hot-toast';
+
 const Login = () => {
     const {userLoggedIn} = useAuth()
 
@@ -16,6 +17,7 @@ const Login = () => {
         try{
             setIsSigningIn(true);
             await doSignInWithEmailAndPassword(email, password);
+
             toast.success("Successfully Signed In");
         }catch(e){
             if(e.code === "auth/invalid-credential"){

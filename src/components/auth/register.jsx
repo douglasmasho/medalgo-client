@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Navigate, Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/authContext/index'
 import { doCreateUserWithEmailAndPassword } from '../../firebase/auth';
 import { db } from '../../firebase/firebase';
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import toast from "react-hot-toast";
+import { useUser } from '../../contexts/userContext';
+
 console.log(db);
 
 
 const Register = () => {
-
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setconfirmPassword] = useState('')
@@ -20,7 +22,8 @@ const Register = () => {
     const [organization, setOrganization] = useState("");
     const [practiceNumber, setPracticeNumber] = useState("");
 
-    const { userLoggedIn } = useAuth()
+    const {currentUser, setCurrentUser} = useUser()
+    const { userLoggedIn } = useAuth();
 
     const onSubmit = async (e) => {
         e.preventDefault()
@@ -29,8 +32,8 @@ const Register = () => {
             try{
             const userCredential = await doCreateUserWithEmailAndPassword(email, password);
             const uid = userCredential.user.uid;
-            console.log("work")
-            await setDoc(doc(db, "users", uid), {
+            console.log("work");
+            const userObj = {
                 title,
                 fullName,
                 email,
@@ -40,10 +43,15 @@ const Register = () => {
                 profilePic: "https://i.ibb.co/z6xFjgk/defaultpic.png",
                 practiceNumber: practiceNumber,
                 patients: []
-            })
+            }
+            await setDoc(doc(db, "users", uid), userObj);
+            setCurrentUser(userObj);
+            toast.success("Successfully Created Account");
+            localStorage.setItem("currentUser", userObj);
             }catch(e){
                 console.log(e);
-                setErrorMessage(e.code)
+                setErrorMessage(e.code);
+                toast.error(e.code)
             }finally{
                 setIsRegistering(false);
             }

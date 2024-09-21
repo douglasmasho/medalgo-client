@@ -53,6 +53,10 @@ const EditProfilePage = () => {
 
 	const { userLoggedIn, currentUser } = useAuth();
 
+
+
+
+
 	const getProfilePic = async () => {
 		setLoading(true);
 		setLoading3(true);
@@ -134,14 +138,16 @@ const EditProfilePage = () => {
 		e.preventDefault()
 		setLoading3(true);
 		try{
-			await updateDoc(doc(db, "users", currentUser.uid), {
+			const userObj = {
 				email,
 				title,
 				fullName,
 				role,
 				organization,
 				practiceNumber
-			})
+			}
+			await updateDoc(doc(db, "users", currentUser.uid), userObj);
+			localStorage.setItem("currentUser", JSON.stringify(userObj));
 		}catch(e){
 			toast.error(e.code);
 			console.log(e)
