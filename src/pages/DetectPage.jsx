@@ -44,9 +44,10 @@ const convertToData = (object) => {
   })
 };
 
+// https://randomuser.me/api/portraits/lego/3.jpg
 const DetectPage = () => {
   const [files, setFiles] = useState([]);
-  const [url, setUrl] = useState("https://randomuser.me/api/portraits/lego/3.jpg");
+  const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const [classifyRes, setClassifyRes] = useState(null);
@@ -121,14 +122,16 @@ const DetectPage = () => {
                           const request = new XMLHttpRequest();
                           const request2 = new XMLHttpRequest();
 
+                          //detect request
                           request.open(
                             "POST",
-                            "https://medalgo-detect.onrender.com/predict"
+                            "http://127.0.0.1:8000/predict"
                           );
 
+                          //classify request
                           request2.open(
                             "POST",
-                            "https://medalgo-classify.onrender.com/predict"
+                            "http://127.0.0.1:8001/predict"
                           )
 
                           request.responseType = "blob";
