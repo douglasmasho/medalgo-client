@@ -85,7 +85,7 @@ const PatientsTable = ({ isDarkMode }) => {
             isDarkMode
               ? "bg-gray-800 text-white"
               : "bg-white text-gray-900 shadow-lg"
-          } shadow-lg rounded-xl p-6 border`}
+          } shadow-lg rounded-xl p-6`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}

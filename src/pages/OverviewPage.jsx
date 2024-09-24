@@ -57,62 +57,37 @@ const OverviewPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
             >
-              <div
-                className={`p-6 rounded-lg shadow-md ${
-                  isDarkMode
-                    ? "bg-gray-800 text-white"
-                    : "bg-gray-100 text-black shadow-lg"
-                }`}
-              >
+
                 <StatCard
                   name="Total Sales"
                   icon={Zap}
                   value="$12,345"
                   color="#6366F1"
                 />
-              </div>
-              <div
-                className={`p-6 rounded-lg shadow-md ${
-                  isDarkMode
-                    ? "bg-gray-800 text-white"
-                    : "bg-gray-100 text-black shadow-lg"
-                }`}
-              >
+
+              
                 <StatCard
                   name="New Users"
                   icon={Users}
                   value="1,234"
                   color="#8B5CF6"
                 />
-              </div>
-              <div
-                className={`p-6 rounded-lg shadow-md ${
-                  isDarkMode
-                    ? "bg-gray-800 text-white"
-                    : "bg-gray-100 text-black shadow-lg"
-                }`}
-              >
+             
                 <StatCard
                   name="Total Products"
                   icon={ShoppingBag}
                   value="567"
                   color="#EC4899"
                 />
-              </div>
-              <div
-                className={`p-6 rounded-lg shadow-md ${
-                  isDarkMode
-                    ? "bg-gray-800 text-white"
-                    : "bg-gray-100 text-black shadow-lg"
-                }`}
-              >
+             
+
                 <StatCard
                   name="Conversion Rate"
                   icon={BarChart2}
                   value="12.5%"
                   color="#10B981"
                 />
-              </div>
+
             </motion.div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
