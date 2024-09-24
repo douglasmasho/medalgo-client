@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Header from "../components/common/Header";
-import { Search, Brain, CircleX } from "lucide-react";
+import { Search, Brain, CircleX, } from "lucide-react";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
@@ -18,6 +18,7 @@ import { db } from "../firebase/firebase";
 import { addDoc, setDoc, doc  } from "firebase/firestore";
 import { Modal } from 'react-responsive-modal';
 import PatientsTable2 from "../components/users/PatientsTable2";
+import { useDarkMode } from "../contexts/darkModeContext";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -53,6 +54,14 @@ const DetectPage = () => {
   const [tumorType, setTumorType] = useState("");
 	const [open, setOpen] = useState(false);
 	const [loggedInUser, setLoggedInUser] = useState(null);
+  const { isDarkMode } = useDarkMode(); // Use dark mode context
+
+  // Set dynamic colors based on the mode
+  const backgroundColor = isDarkMode ? "bg-gray-800" : "bg-white";
+  const cardBackgroundColor = isDarkMode ? "bg-gray-800" : "bg-gray-100";
+  const borderColor = isDarkMode ? "border-gray-700" : "border-gray-300";
+  const textColor = isDarkMode ? "text-gray-100" : "text-gray-900";
+  const secondaryTextColor = isDarkMode ? "text-gray-400" : "text-gray-600";
 
   useEffect(()=>{
 		setLoggedInUser(JSON.parse(localStorage.getItem("currentUser")))
@@ -68,30 +77,30 @@ const DetectPage = () => {
   }
 
   return (
-    <div className="flex-1 overflow-auto relative z-10">
+    <div className={`flex-1 overflow-auto relative z-10 ${backgroundColor}`}>
       {!userLoggedIn && !loggedInUser ? (<Navigate to="/login" replace={true} />) :
         <>
           <Header
             title="Detect"
-            icon={<Search style={{ marginRight: "10px" }} />}
+            icon={<Search style={{ marginRight: "10px" }} color="#0094ff" />}
           />
 
           <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
             <motion.div
-              className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
+              className={`${cardBackgroundColor} bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border ${borderColor}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 1 }}
             >
               {/* Detect Part */}
-              <p className="u-margin-bottom">
+              <p className={`u-margin-bottom ${secondaryTextColor}`}>
                 Upload a brain MRI image to detect the presence of a tumor and more
                 information about the tumor if it exists
               </p>
               <div className="grid grid-2 u-margin-bottom-medium">
 
-                <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700 center-text">
-                  <h3 className="bigish-text mt-3">Input</h3>
+                <div className={`${cardBackgroundColor} bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border ${borderColor} center-text`}>
+                  <h3 className={`bigish-text mt-3 ${textColor}`}>Input</h3>
 
                   <div className="px-4 py-5 sm:p-6 ">
                     <FilePond
@@ -184,13 +193,13 @@ const DetectPage = () => {
                   </div>
                 </div>
 
-                <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700 center-text">
-                  <h3 className="bigish-text mt-3">Output</h3>
+                <div className={`${cardBackgroundColor} bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border ${borderColor} center-text`}>
+                  <h3 className={`bigish-text mt-3 ${textColor}`}>Output</h3>
 
                   <div className="px-4 py-5 sm:p-6">
                     {loading ?
                       <div style={{ textAlign: "center" }}>
-                        <p>Medalgo is processing your image...</p>
+                        <p className={textColor}>Medalgo is processing your image...</p>
                         <Lottie animationData={animation} />
                       </div>
                       :
@@ -224,14 +233,14 @@ const DetectPage = () => {
 
           <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
             <motion.div
-              className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
+              className={`${cardBackgroundColor} bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border ${borderColor}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 1 }}
             >
               <div className="grid grid-2 u-margin-bottom-medium">
-                <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700 p-5">
-                  <p className="">Major class probabilities</p>
+                <div className={`${cardBackgroundColor} bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border ${borderColor} p-5`}>
+                  <p className={textColor}>Major class probabilities</p>
 
 
                   {
@@ -239,7 +248,7 @@ const DetectPage = () => {
                       <Lottie animationData={animation} /> :
                       classifyRes ?
                         <>
-                          <h3 className="bigger2-text capitalize-text">{classifyRes.predicted_class} <span className="blue-text">{(classifyRes.class_probabilities[classifyRes.predicted_class]).toFixed(2)}%</span></h3>
+                          <h3 className={`bigger2-text capitalize-text ${textColor}`}>{classifyRes.predicted_class} <span className="blue-text">{(classifyRes.class_probabilities[classifyRes.predicted_class]).toFixed(2)}%</span></h3>
                           <BarGraphCustom dataObj={convertToData(classifyRes.class_probabilities)} />
                         </> :
                         <div className="center-text" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
@@ -255,8 +264,8 @@ const DetectPage = () => {
 
                 </div>
 
-                <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700 p-5" style={{ maxHeight: "400px", overflowY: "scroll", overflowX: "hidden" }}>
-                  <p className="">Information Panel</p>
+                <div className={`${cardBackgroundColor} bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border ${borderColor} p-5`} style={{ maxHeight: "400px", overflowY: "scroll", overflowX: "hidden" }}>
+                  <p className={textColor}>Information Panel</p>
                   {
                     loading2 ?
                       <Lottie animationData={animation} /> :
@@ -271,33 +280,33 @@ const DetectPage = () => {
                             </div>
                             :
                             tumorType === "notumor" ?
-                              <h3 className="bigger-text capitalize-text">All good here</h3> :
+                              <h3 className={`bigger-text capitalize-text ${textColor}`}>All good here</h3> :
                               <>
-                                <h3 className="bigger-text capitalize-text">{tumorData[tumorType].name} <span className="blue-text">Information</span></h3>
-                                <p className="u-margin-bottom-small">Sources:
+                                <h3 className={`bigger-text capitalize-text ${textColor}`}>{tumorData[tumorType].name} <span className="blue-text">Information</span></h3>
+                                <p className={`u-margin-bottom-small ${secondaryTextColor}`}>Sources:
                                   {
                                     tumorData[tumorType].sources.map((item, index) => (<a href={item.link} key={index} target="_blank" style={{ color: "#61DBFB" }}> | {item.name}</a>))
                                   }
                                 </p>
-                                <h2 className="u-margin-bottom-small medium-text">What is a {tumorData[tumorType].name}?</h2>
+                                <h2 className={`u-margin-bottom-small medium-text ${textColor}`}>What is a {tumorData[tumorType].name}?</h2>
                                 {
                                   tumorData[tumorType].description.split("\n\n").map((para, index) => (
-                                    <p className="u-margin-bottom-small" key={index}>{para}</p>
+                                    <p className={`u-margin-bottom-small ${secondaryTextColor}`} key={index}>{para}</p>
                                   ))
                                 }
 
-                                <h2 className="u-margin-bottom-small mt-10 medium-text">Types</h2>
+                                <h2 className={`u-margin-bottom-small mt-10 medium-text ${textColor}`}>Types</h2>
                                 {
                                   tumorData[tumorType].types.map((item, index) => (
-                                    <li className="pl-5" key={index}>{item}</li>
+                                    <li className={`pl-5 ${secondaryTextColor}`} key={index}>{item}</li>
                                   ))
                                 }
 
-                                <h2 className="u-margin-bottom-small mt-10 medium-text">Symptoms</h2>
-                                <p className="u-margin-bottom-small">{tumorData[tumorType].symptomsHeader}</p>
+                                <h2 className={`u-margin-bottom-small mt-10 medium-text ${textColor}`}>Symptoms</h2>
+                                <p className={`u-margin-bottom-small ${secondaryTextColor}`}>{tumorData[tumorType].symptomsHeader}</p>
                                 {
                                   tumorData[tumorType].symptoms.map((item, index) => (
-                                    <li className="pl-5" key={index}>{item}</li>
+                                    <li className={`pl-5 ${secondaryTextColor}`} key={index}>{item}</li>
                                   ))
                                 }
                               </>
@@ -317,7 +326,7 @@ const DetectPage = () => {
       }
 
     <Modal open={open} onClose={onCloseModal} center classNames={{
-          modal: "bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700",
+          modal: `${cardBackgroundColor} bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border ${borderColor}`,
         }}
         styles={{
           modal: {
@@ -326,7 +335,7 @@ const DetectPage = () => {
         }}
         closeIcon={<CircleX style={{color: "white"}}/>}
         >
-      <h2 className="text-2xl font-semibold text-gray-100 u-margin-bottom-small">Choose Patient</h2>
+      <h2 className={`text-2xl font-semibold ${textColor} u-margin-bottom-small`}>Choose Patient</h2>
       <PatientsTable2/>
     </Modal>
     </div>

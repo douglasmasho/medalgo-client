@@ -1,54 +1,43 @@
 import { Bar } from "react-chartjs-2";
-
 import {
-	Chart as ChartJS,
-	BarElement,
-	CategoryScale,
-	LinearScale,
-	Tooltip,
-	Legend
-} from "chart.js"
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { useDarkMode } from "../../contexts/darkModeContext";
 
-ChartJS.register(BarElement,
-	CategoryScale,
-	LinearScale,
-	Tooltip,
-	Legend)
+ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
+const BarGraphCustom = ({ dataObj }) => {
+  const { isDarkMode } = useDarkMode(); // Use dark mode context
 
+  // Set dynamic colors based on the mode
+  const textColor = isDarkMode ? "#ffffff" : "#000000";
 
-const BarGraphCustom = ({dataObj}) => {
-	const data = {
-		labels: ["mon", "Tue", "Wed"],
-		datasets: [
-			{
-				label: "",
-				data: [100,200,300],
-				backgroundColor: "#0094ff"
-			}
-		]
-	}
+  const options = {
+    indexAxis: "y",
+    scales: {
+      x: {
+        ticks: {
+          color: textColor, // Change x-axis label color based on dark mode
+        },
+      },
+      y: {
+        ticks: {
+          color: textColor, // Change y-axis label color based on dark mode
+        },
+      },
+    },
+  };
 
-	const options = {
-		indexAxis: "y",
-		scales: {
-			x: {
-				ticks: {
-					color: "#ffffff" // Change x-axis label color (red in this case)
-				}
-			},
-			y: {
-				ticks: {
-					color: "#ffffff" // Change y-axis label color (green in this case)
-				}
-			}
-		}
-	}
-	return ( 
-		<div>
-			<Bar data={dataObj} options={options}></Bar>
-		</div>
-	 );
-}
- 
+  return (
+    <div>
+      <Bar data={dataObj} options={options}></Bar>
+    </div>
+  );
+};
+
 export default BarGraphCustom;

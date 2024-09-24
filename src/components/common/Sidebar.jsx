@@ -1,22 +1,20 @@
 import {
-  BarChart2,
-  DollarSign,
   Menu,
-  Settings,
-  ShoppingCart,
-  TrendingUp,
-  Users,
   BadgeHelp,
   LayoutDashboard,
   Search,
   BrainCircuit,
   View,
   User,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../../assets/svg/logowhite.svg";
+import { ReactComponent as Logo2 } from "../../assets/svg/logoblack.svg";
+import { useDarkMode } from "../../contexts/darkModeContext";
 
 const SIDEBAR_ITEMS = [
   {
@@ -30,14 +28,17 @@ const SIDEBAR_ITEMS = [
   { name: "Analyze", icon: BrainCircuit, color: "#0094ff", href: "/analyze" },
   { name: "Visualize", icon: View, color: "#0094ff", href: "/visualize" },
   { name: "Profile", icon: User, color: "#0094ff", href: "/profile" },
-
-  // { name: "Orders", icon: ShoppingCart, color: "#0094ff", href: "/orders" },
-  // { name: "Analytics", icon: TrendingUp, color: "#0094ff", href: "/analytics" },
-  // { name: "Settings", icon: Settings, color: "#0094ff", href: "/settings" },
 ];
 
 const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { isDarkMode, toggleDarkMode } = useDarkMode(); // Use dark mode context
+
+  // Use bg-white for a light sidebar background in light mode
+  const backgroundColor = isDarkMode ? "bg-gray-800" : "u-white-bg";
+  const borderColor = isDarkMode ? "border-gray-700" : "border-gray-300";
+  const textColor = isDarkMode ? "text-white" : "text-gray-900";
+  const hoverColor = isDarkMode ? "hover:bg-gray-700" : "hover:bg-gray-100";
 
   return (
     <motion.div
@@ -46,16 +47,27 @@ const Sidebar = () => {
       }`}
       animate={{ width: isSidebarOpen ? 256 : 80 }}
     >
-      <div className="h-full bg-gray-800 bg-opacity-50 backdrop-blur-md p-4 flex flex-col border-r border-gray-700">
-        <div style={{ display: "flex" }}>
+      <div
+        className={`h-full ${backgroundColor} bg-opacity-50 backdrop-blur-md p-4 flex flex-col ${borderColor} border-r`}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          {/* Toggle Sidebar Button */}
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-2 rounded-full hover:bg-gray-700 transition-colors max-w-fit"
+            className={`p-2 rounded-full ${hoverColor} transition-colors max-w-fit`}
           >
-            <Menu size={24} />
+            <Menu size={24} className={textColor} />
           </motion.button>
+
+          {/* Logo */}
           <AnimatePresence>
             {isSidebarOpen && (
               <motion.span
@@ -64,16 +76,31 @@ const Sidebar = () => {
                 exit={{ opacity: 0, width: 0 }}
                 transition={{ duration: 0.2, delay: 0.3 }}
               >
-                <Logo style={{ width: "120px" }} />
+                {isDarkMode ? (
+                  <Logo style={{ width: "120px" }} />
+                ) : (
+                  <Logo2 style={{ width: "120px" }} />
+                )}
               </motion.span>
             )}
           </AnimatePresence>
+
+          {/* Dark Mode Toggle */}
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={toggleDarkMode}
+            className={`p-2 rounded-full ${hoverColor} transition-colors max-w-fit`}
+          ></motion.button>
         </div>
 
+        {/* Sidebar Navigation */}
         <nav className="mt-8 flex-grow">
           {SIDEBAR_ITEMS.map((item) => (
             <Link key={item.href} to={item.href}>
-              <motion.div className="flex items-center p-4 text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors mb-2">
+              <motion.div
+                className={`flex items-center p-4 text-sm font-medium rounded-lg ${hoverColor} transition-colors mb-2`}
+              >
                 <item.icon
                   size={20}
                   style={{ color: item.color, minWidth: "20px" }}
@@ -81,7 +108,7 @@ const Sidebar = () => {
                 <AnimatePresence>
                   {isSidebarOpen && (
                     <motion.span
-                      className="ml-4 whitespace-nowrap"
+                      className={`ml-4 whitespace-nowrap ${textColor}`}
                       initial={{ opacity: 0, width: 0 }}
                       animate={{ opacity: 1, width: "auto" }}
                       exit={{ opacity: 0, width: 0 }}
@@ -94,9 +121,34 @@ const Sidebar = () => {
               </motion.div>
             </Link>
           ))}
+          <motion.div
+            className={`flex items-center p-4 text-sm font-medium rounded-lg ${hoverColor} transition-colors mb-2`}
+            onClick={toggleDarkMode}
+            style={{ cursor: "pointer" }}
+          >
+            {isDarkMode ? (
+              <Sun size={20} style={{ color: "#0094ff", minWidth: "20px" }} />
+            ) : (
+              <Moon size={20} style={{ color: "#0094ff", minWidth: "20px" }} />
+            )}
+            <AnimatePresence>
+              {isSidebarOpen && (
+                <motion.span
+                  className={`ml-4 whitespace-nowrap ${textColor}`}
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: "auto" }}
+                  exit={{ opacity: 0, width: 0 }}
+                  transition={{ duration: 0.2, delay: 0.3 }}
+                >
+                  {isDarkMode ? "Light Mode" : "Dark Mode"}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.div>
         </nav>
       </div>
     </motion.div>
   );
 };
+
 export default Sidebar;

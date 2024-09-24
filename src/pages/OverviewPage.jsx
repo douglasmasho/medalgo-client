@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BarChart2, ShoppingBag, Users, Zap } from "lucide-react";
+import { BarChart2, ShoppingBag, Users, Zap, LayoutDashboard } from "lucide-react";
 import { motion } from "framer-motion";
 import Header from "../components/common/Header";
 import StatCard from "../components/common/StatCard";
@@ -33,16 +33,8 @@ const OverviewPage = () => {
         <Navigate to="/login" replace={true} />
       ) : (
         <>
-          <Header title="Dashboard" />
-          <div className="flex justify-end p-4">
-            {/* Theme toggle button */}
-            <button
-              onClick={toggleDarkMode}
-              className="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 px-4 py-2 rounded-md"
-            >
-              {isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            </button>
-          </div>
+          <Header title="Dashboard" icon={<LayoutDashboard style={{ marginRight: "10px" }} color="#0094ff"/>}/>
+         
 
           {loggedInUser?.role === "medical" ? (
             <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
