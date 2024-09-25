@@ -72,9 +72,7 @@ const DetectPage = () => {
 
   const { userLoggedIn } = useAuth();
 
-  const addDiagnosis = async()=>{
-    
-  }
+
 
   return (
     <div className={`flex-1 overflow-auto relative z-10 ${backgroundColor}`}>
@@ -132,12 +130,12 @@ const DetectPage = () => {
 
                           request.open(
                             "POST",
-                            "https://medalgo-detect.onrender.com/predict"
+                            "http://127.0.0.1:8000/predict"
                           );
 
                           request2.open(
                             "POST",
-                            "https://medalgo-classify.onrender.com/predict"
+                            "http://127.0.0.1:8001/predict"
                           )
 
                           request.responseType = "blob";
@@ -336,7 +334,7 @@ const DetectPage = () => {
         closeIcon={<CircleX style={{color: "white"}}/>}
         >
       <h2 className={`text-2xl font-semibold ${textColor} u-margin-bottom-small`}>Choose Patient</h2>
-      <PatientsTable2/>
+      <PatientsTable2 class_predictions={classifyRes} predicted_class={tumorType} url={url}/>
     </Modal>
     </div>
   );

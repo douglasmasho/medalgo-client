@@ -32,14 +32,15 @@ const AddPatientForm = ({ closeModal, getPatients, isDarkMode }) => {
     if (!isAdding) {
       setIsAdding(true);
       setIsLoading(true);
+      const pid = nanoid(12);
       try {
         const data = {
+          pid,
           fullName,
           gender,
           dob: startDate.getTime(),
           lastDiagnosis: null,
         };
-        const pid = nanoid(12);
         await setDoc(doc(db, "patients", pid), data);
         await updateDoc(doc(db, "users", currentUser.uid), {
           patients: arrayUnion(pid),

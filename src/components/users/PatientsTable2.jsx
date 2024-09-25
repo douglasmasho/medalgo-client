@@ -10,6 +10,7 @@ import { useAuth } from "../../contexts/authContext";
 import Lottie from "lottie-react";
 import animation from "../../assets/animation/loadingcubes.json"
 import moment from "moment";
+import toast from "react-hot-toast";
 
 const customStyles = {
 	content: {
@@ -23,14 +24,28 @@ const customStyles = {
   };
   
 
-const PatientsTabl2 = () => {
+const PatientsTable2 = ({class_predictions, predicted_class, url}) => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filteredUsers, setFilteredUsers] = useState([]);
 	const [allPatients, setAllPatients] = useState([]);
 	const [open, setOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
-	const {currentUser} = useAuth()
+	const {currentUser} = useAuth();
+
+	useEffect(()=>{
+		getPatients();
+	}, [])
+
+	const addDiagnosis = async(pid)=>{
+		console.log({url, class_predictions, predicted_class, pid})
+		// try{
+		//   const diagnosis = 
+
+		// }catch(e){
+		// 	toast.error(e.code)
+		// }
+	}
 
 	const handleSearch = (e) => {
 		const term = e.target.value.toLowerCase();
@@ -86,9 +101,7 @@ const PatientsTabl2 = () => {
 		}
 	}
 
-	useEffect(()=>{
-		getPatients();
-	}, [])
+
 
 	return (
 		<>
@@ -177,7 +190,9 @@ const PatientsTabl2 = () => {
 							</td>
 
 							<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300 u-v'>
-                            <button className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mx-5'>
+                            <button className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mx-5' onClick={()=>{
+								addDiagnosis(user.pid)
+							}}>
                               <Plus/>
                             </button>
 							</td>
@@ -192,4 +207,4 @@ const PatientsTabl2 = () => {
 
 	);
 };
-export default PatientsTabl2;
+export default PatientsTable2;
