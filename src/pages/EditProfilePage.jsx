@@ -10,7 +10,8 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Import F
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 import Lottie from "lottie-react";
-import animation from "../assets/animation/loadingcubes.json"
+import animation from "../assets/animation/loadingcubes.json";
+import { useDarkMode } from "../contexts/darkModeContext"; // Import dark mode context
 
 function base64ToBlob(base64) {
 	const [metadata, base64String] = base64.split(',');
@@ -48,15 +49,16 @@ const EditProfilePage = () => {
 	const [role, setRole] = useState("");
 	const [organization,setOrganization] = useState("");
 	const [practiceNumber, setPracticeNumber] = useState("");
-
+	const { isDarkMode } = useDarkMode(); // Access dark mode state
 
 
 	const { userLoggedIn, currentUser } = useAuth();
 
+	const backgroundColor = isDarkMode ? "bg-gray-900" : "bg-white";
+	const textColor = isDarkMode ? "text-gray-100" : "text-gray-900";
+	const borderColor = isDarkMode ? "border-gray-700" : "border-gray-300";
 
-
-
-
+	
 	const getProfilePic = async () => {
 		setLoading(true);
 		setLoading3(true);
@@ -158,7 +160,7 @@ const EditProfilePage = () => {
 
 
 	return (
-		<div className='flex-1 overflow-auto relative z-10 bg-gray-900'>
+		<div className={`flex-1 overflow-auto relative z-10 ${backgroundColor}`}>
 			{!userLoggedIn ? (<Navigate to="/login" replace={true} />) :
 				<>
 					<Header title='Edit Profile' icon={<UserRoundPen className="mr-2" />} />
@@ -247,11 +249,11 @@ const EditProfilePage = () => {
 							<>
 							    <form
 								onSubmit={onSubmit}
-								className="space-y-4 white-text"
+								className={`space-y-4 white-text ${textColor}`}
 								style={{width: "90%"}}
 									>
 								<div>
-									<label className="text-sm white-text font-bold">
+									<label className={`text-sm font-bold ${textColor}`}>
 										Title
 									</label>
 									<input
@@ -260,11 +262,11 @@ const EditProfilePage = () => {
 										autoComplete='title'
 										required
 										value={title} onChange={(e) => { setTitle(e.target.value) }}
-										className="w-full mt-2 px-3 py-2 white-text bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300"
+										className={`w-full mt-2 px-3 py-2 bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300 ${textColor}`}
 									/>
 								</div>
 								<div>
-									<label className="text-sm white-text font-bold">
+									<label className={`text-sm font-bold ${textColor}`}>
 										Full Name
 									</label>
 									<input
@@ -272,18 +274,18 @@ const EditProfilePage = () => {
 										autoComplete='full-name'
 										required
 										value={fullName} onChange={(e) => { setFullName(e.target.value) }}
-										className="w-full mt-2 px-3 py-2 white-text bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300"
+										className={`w-full mt-2 px-3 py-2 bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300 ${textColor}`}
 									/>
 								</div>
 								<div>
-									<label className="text-sm white-text font-bold">
+									<label className={`text-sm font-bold ${textColor}`}>
 										Role
 									</label>
 									<select
 										required
 										value={role}
 										onChange={(e) => { setRole(e.target.value) }}
-										className="w-full mt-2 px-3 py-2 white-text bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300"
+										className={`w-full mt-2 px-3 py-2 bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300 ${textColor}`}
 									>
 										<option value="" disabled>Select an option</option>
 										<option value="medical" className='black-text'>Medical Professional</option>
@@ -291,7 +293,7 @@ const EditProfilePage = () => {
 									</select>
 								</div>
 								<div>
-									<label className="text-sm white-text font-bold">
+									<label className={`text-sm font-bold ${textColor}`}>
 										Organization / Institution
 									</label>
 									<input
@@ -299,13 +301,13 @@ const EditProfilePage = () => {
 										autoComplete='organization'
 										required
 										value={organization} onChange={(e) => { setOrganization(e.target.value) }}
-										className="w-full mt-2 px-3 py-2 white-text bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300"
+										className={`w-full mt-2 px-3 py-2 bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300 ${textColor}`}
 									/>
 								</div>
 								{
 									role === "medical" ?
 									<div>
-									<label className="text-sm white-text font-bold">
+									<label className={`text-sm font-bold ${textColor}`}>
 										Practice Number
 									</label>
 									<input
@@ -313,12 +315,12 @@ const EditProfilePage = () => {
 										autoComplete='practice-number'
 										required
 										value={practiceNumber} onChange={(e) => { setPracticeNumber(e.target.value) }}
-										className="w-full mt-2 px-3 py-2 white-text bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300"
+										className={`w-full mt-2 px-3 py-2 bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300 ${textColor}`}
 									/>
 									</div>: null
 								}
 								<div>
-									<label className="text-sm white-text font-bold">
+									<label className={`text-sm font-bold ${textColor}`}>
 										Email
 									</label>
 									<input
@@ -326,7 +328,7 @@ const EditProfilePage = () => {
 										autoComplete='email'
 										required
 										value={email} onChange={(e) => { setEmail(e.target.value) }}
-										className="w-full mt-2 px-3 py-2 white-text bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300"
+										className={`w-full mt-2 px-3 py-2 bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300 ${textColor}`}
 									/>
 								</div>
 

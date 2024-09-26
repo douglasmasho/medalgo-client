@@ -10,8 +10,8 @@ const HowToPage = () => {
   const { isDarkMode } = useDarkMode(); // Use dark mode context
 
   // Set dynamic colors based on the mode
-  const backgroundColor = isDarkMode ? "bg-gray-800" : "bg-white";
-  const borderColor = isDarkMode ? "border-gray-700" : "border-gray-300";
+  const backgroundColor = isDarkMode ? "bg-gray-900" : "bg-white";
+  const borderColor = isDarkMode ? "border-gray-800" : "border-gray-300";
   const textColor = isDarkMode ? "text-gray-100" : "text-gray-900";
   const secondaryTextColor = isDarkMode ? "text-gray-400" : "text-gray-600";
 

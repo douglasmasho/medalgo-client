@@ -41,9 +41,9 @@ const AnalysisPage = () => {
 
 
     // Set dynamic colors based on the mode
-    const backgroundColor = isDarkMode ? "bg-gray-800" : "bg-white";
+    const backgroundColor = isDarkMode ? "bg-gray-900" : "bg-white";
     const cardBackgroundColor = isDarkMode ? "bg-gray-800" : "bg-gray-100";
-    const borderColor = isDarkMode ? "border-gray-700" : "border-gray-300";
+    const borderColor = isDarkMode ? "border-gray-700" : "border-gray-100";
     const textColor = isDarkMode ? "text-gray-100" : "text-gray-900";
     const secondaryTextColor = isDarkMode ? "text-gray-400" : "text-gray-600";
   
@@ -59,29 +59,29 @@ const AnalysisPage = () => {
   }, [])
 
   return (
-    <div className="flex-1 overflow-auto relative z-10">
+    <div className={`flex-1 overflow-auto relative z-10 ${backgroundColor}`}>
       {!userLoggedIn ? (<Navigate to="/login" replace={true} />) :
         <>
           <Header
             title="Analyze"
-            icon={<BrainCircuit style={{ marginRight: "10px" }} />}
+            icon={<BrainCircuit style={{ marginRight: "10px", color: "#0094ff" }} />}
           />
 
           <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
             <motion.div
-              className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
+              className={`bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border ${borderColor} ${backgroundColor}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 1 }}
             >
               {/* Detect Part */}
-              <p className="u-margin-bottom">
+              <p className={`u-margin-bottom ${textColor}`}>
                 Upload a brain MRI image in .nii (t1ce sequence works best) to analzye the class of the tumor and visualize the brain image in 3D. Please note that this feature only available for Gliomas due to data constraints.
               </p>
               <div className="grid grid-2 u-margin-bottom-medium">
 
-                <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700 center-text">
-                  <h3 className="bigish-text mt-3">Input</h3>
+                <div className={`bg-gray-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border ${borderColor} center-text ${backgroundColor}`}>
+                  <h3 className={`bigish-text mt-3 ${textColor}`}>Input</h3>
 
                   <div className="px-4 py-5 sm:p-6 ">
                     <FilePond
@@ -162,13 +162,13 @@ const AnalysisPage = () => {
                   </div>
                 </div>
 
-                <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700">
-                  <h3 className="bigish-text mt-3 ml-5 mr-5">Predicted Class</h3>
+                <div className={`bg-gray-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border ${borderColor} ${backgroundColor}`}>
+                  <h3 className={`bigish-text mt-3 ml-5 mr-5 ${textColor}`}>Predicted Class</h3>
 
                   <div className="px-4 py-5 sm:p-6">
                     {loading ?
                       <div style={{ textAlign: "center" }}>
-                        <p>Medalgo is processing your image...</p>
+                        <p className={`${textColor}`}>Medalgo is processing your image...</p>
                         <Lottie animationData={animation} />
                       </div>
                       :
@@ -179,7 +179,7 @@ const AnalysisPage = () => {
                       ) : (
                         <div>
 
-                          <h3 className="bigger-text capitalize-text">
+                          <h3 className={`bigger-text capitalize-text ${textColor}`}>
                             {predictedClass === "HGG" ? "High-Grade Glioma" : "Low-Grade Glioma"}
                           </h3>
                           <button className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mt-5' onClick={onOpenModal}>
@@ -198,15 +198,15 @@ const AnalysisPage = () => {
 
           <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
             <motion.div
-              className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
+              className={`bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border ${borderColor}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 1 }}
             >
               <div className="u-margin-bottom-medium">
 
-                <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700 p-5" style={{ maxHeight: "400px", overflowY: "scroll", overflowX: "hidden" }}>
-                  <p className="">Information Panel</p>
+                <div className={`${backgroundColor} ${borderColor} bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border p-5`} style={{ maxHeight: "400px", overflowY: "scroll", overflowX: "hidden" }}>
+                  <p className={textColor}>Information Panel</p>
                   {
                     loading ?
                       <Lottie animationData={animation} /> :
@@ -221,26 +221,26 @@ const AnalysisPage = () => {
                             </div>
                             :
                             <>
-                              <h3 className="bigger-text capitalize-text">{gradesData[predictedClass].name} <span className="blue-text">Information</span></h3>
-                              <p className="u-margin-bottom-small">Sources:
+                              <h3 className={`bigger-text capitalize-text ${textColor}`}>{gradesData[predictedClass].name} <span className="blue-text">Information</span></h3>
+                              <p className={`u-margin-bottom-small ${textColor}`}>Sources:
                                 {
-                                  gradesData[predictedClass].sources.map((item, index) => (<a href={item.link} key={index} target="_blank" style={{ color: "#61DBFB" }}> | {item.name}</a>))
+                                  gradesData[predictedClass].sources.map((item, index) => (<a href={item.link} key={index} target="_blank" style={{ color: isDarkMode ? "#61DBFB" : "blue" }}> | {item.name}</a>))
                                 }
                               </p>
-                              <h2 className="u-margin-bottom-small medium-text">What is a {gradesData[predictedClass].name}?</h2>
+                              <h2 className={`${textColor} u-margin-bottom-small medium-text`}>What is a {gradesData[predictedClass].name}?</h2>
                               {
                                 gradesData[predictedClass].description.split("\n\n").map((para, index) => (
-                                  <p className="u-margin-bottom-small" key={index}>{para}</p>
+                                  <p className={`u-margin-bottom-small ${textColor}`} key={index}>{para}</p>
                                 ))
                               }
 
-                              <h2 className="u-margin-bottom-small mt-10 medium-text">Causes</h2>
-                              <p className="u-margin-bottom-small">{gradesData[predictedClass].causes}</p>
+                              <h2 className={`u-margin-bottom-small mt-10 medium-text ${textColor}`}>Causes</h2>
+                              <p className={`u-margin-bottom-small ${textColor}`}>{gradesData[predictedClass].causes}</p>
 
-                              <h2 className="u-margin-bottom-small mt-10 medium-text">Symptoms</h2>
+                              <h2 className={`u-margin-bottom-small mt-10 medium-text ${textColor}`}>Symptoms</h2>
                               {
                                 gradesData[predictedClass].symptoms.map((item, index) => (
-                                  <li className="pl-5" key={index}>{item}</li>
+                                  <li className={`pl-5 ${textColor}`} key={index}>{item}</li>
                                 ))
                               }
                             </>

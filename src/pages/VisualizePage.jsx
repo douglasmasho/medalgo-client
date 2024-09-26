@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from "react";
-
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Header from "../components/common/Header";
 import { View } from "lucide-react";
@@ -12,43 +11,42 @@ import Lottie from "lottie-react";
 import animation from "../assets/animation/loadingbrain.json";
 import PieChartCustom from "../components/charts/PieChartCustom";
 import BarGraphCustom from "../components/charts/BarGraphCustom";
-import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import NiiVue from "../Niivue";
 import { useAuth } from "../contexts/authContext/index";
 import { Navigate } from "react-router-dom";
+import { useDarkMode } from "../contexts/darkModeContext"; // Import dark mode context
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 registerPlugin(FilePondPluginFileValidateType);
 
-const iconStyle = {
-  width: "100px",
-};
-
-
-// const volumes = 
-
 const VisualizePage = () => {
-
   const { userLoggedIn } = useAuth();
+  const { isDarkMode } = useDarkMode(); // Use dark mode context
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [volumes, setVolumes] = useState([{ url: './hgg.nii' }]);
 
-  // const volumes = useMemo(()=>([{url: "./lgg.nii"}]))
+  // Set dynamic colors based on the mode
+  const backgroundColor = isDarkMode ? "bg-gray-900" : "bg-white";
+  const borderColor = isDarkMode ? "border-gray-700" : "border-gray-300";
+  const textColor = isDarkMode ? "text-gray-100" : "text-gray-900";
 
   return (
-    <div className="flex-1 overflow-auto relative z-10">
-      {!userLoggedIn ? (<Navigate to="/login" replace={true} />) :
+    <div className={`flex-1 overflow-auto relative z-10 ${backgroundColor}`}>
+      {!userLoggedIn ? (
+        <Navigate to="/login" replace={true} />
+      ) : (
         <>
           <Header
             title="Visualize"
-            icon={<View style={{ marginRight: "10px" }} />}
+            icon={<View style={{ marginRight: "10px", color: "#0094ff" }} />}
           />
 
           <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
             <motion.div
-              className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
+              className={`shadow-lg rounded-xl p-6 border ${backgroundColor} ${borderColor}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 1 }}
@@ -57,10 +55,9 @@ const VisualizePage = () => {
             </motion.div>
           </main>
         </>
-      }
-
-
+      )}
     </div>
   );
 };
+
 export default VisualizePage;

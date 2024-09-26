@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Search, BrainCircuit, View, BadgeHelp } from "lucide-react";
+import { Search, BrainCircuit, View, BadgeHelp, User } from "lucide-react";
 import { motion } from "framer-motion";
 import Header from "../components/common/Header";
 import { useAuth } from "../contexts/authContext/index";
@@ -84,7 +84,7 @@ const PatientPage = () => {
                     <>
                         <Header
                             title={`Patient: ${patient?.fullName}`}
-                            icon={<BadgeHelp style={{ marginRight: "10px" }} color="#0094ff" />}
+                            icon={<User style={{ marginRight: "10px" }} color="#0094ff" />}
                         />
 
                         <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
