@@ -24,7 +24,7 @@ const SettingsPage = () => {
         <>
           <Header
             title="Profile"
-            icon={<User style={{ marginRight: "10px" }} />}
+            icon={<User style={{ marginRight: "10px", color: "#0094ff" }} />}
           />
           <main className={`max-w-4xl mx-auto py-6 px-4 lg:px-8 ${textColor}`}>
             <Profile />
