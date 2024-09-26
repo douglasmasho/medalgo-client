@@ -19,6 +19,7 @@ import { addDoc, setDoc, doc  } from "firebase/firestore";
 import { Modal } from 'react-responsive-modal';
 import PatientsTable2 from "../components/users/PatientsTable2";
 import { useDarkMode } from "../contexts/darkModeContext";
+import { nanoid } from "nanoid";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -44,10 +45,10 @@ const convertToData = (object) => {
     }]
   })
 };
-
+// https://randomuser.me/api/portraits/lego/3.jpg
 const DetectPage = () => {
   const [files, setFiles] = useState([]);
-  const [url, setUrl] = useState("https://randomuser.me/api/portraits/lego/3.jpg");
+  const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const [classifyRes, setClassifyRes] = useState(null);
@@ -55,6 +56,8 @@ const DetectPage = () => {
 	const [open, setOpen] = useState(false);
 	const [loggedInUser, setLoggedInUser] = useState(null);
   const { isDarkMode } = useDarkMode(); // Use dark mode context
+  const [did, setDid] = useState("");
+  
 
   // Set dynamic colors based on the mode
   const backgroundColor = isDarkMode ? "bg-gray-800" : "bg-white";
@@ -64,7 +67,8 @@ const DetectPage = () => {
   const secondaryTextColor = isDarkMode ? "text-gray-400" : "text-gray-600";
 
   useEffect(()=>{
-		setLoggedInUser(JSON.parse(localStorage.getItem("currentUser")))
+		setLoggedInUser(JSON.parse(localStorage.getItem("currentUser")));
+    setDid(nanoid(12))
 	}, [])
   
   const onOpenModal = () => setOpen(true);
@@ -72,7 +76,65 @@ const DetectPage = () => {
 
   const { userLoggedIn } = useAuth();
 
+  async function downloadBlobFromUrl() {
+    try {
+        const response = await fetch(url);
 
+        // Check if the fetch was successful
+        if (!response.ok) {
+            throw new Error(`Failed to fetch blob: ${response.statusText}`);
+        }
+
+        // Convert the response to a Blob object
+        const blob = await response.blob();
+
+        // Infer the file extension from the blob's MIME type
+        const mimeType = blob.type;
+        const extension = getFileExtension(mimeType);
+
+        // Create a link element
+        const link = document.createElement('a');
+        
+        // Create an object URL from the blob
+        const blobUrlObject = URL.createObjectURL(blob);
+        
+        // Set the href of the link to the object URL
+        link.href = blobUrlObject;
+        
+        // Set the download attribute with the correct file name and extension
+        link.download = `${did}${extension ? '.' + extension : ''}`;
+        
+        // Programmatically click the link to trigger the download
+        document.body.appendChild(link);
+        link.click();
+        
+        // Clean up by revoking the object URL and removing the link element
+        URL.revokeObjectURL(blobUrlObject);
+        document.body.removeChild(link);
+
+        console.log('Download triggered successfully!');
+    } catch (error) {
+        console.error('Error fetching or downloading blob:', error);
+    }
+}
+
+// Helper function to get the file extension from MIME type
+function getFileExtension(mimeType) {
+    const mimeExtensions = {
+        'image/jpeg': 'jpg',
+        'image/png': 'png',
+        'image/gif': 'gif',
+        'application/pdf': 'pdf',
+        'text/plain': 'txt',
+        'application/json': 'json',
+        'application/zip': 'zip',
+        'audio/mpeg': 'mp3',
+        'video/mp4': 'mp4'
+        // Add more mappings as needed
+    };
+
+    return mimeExtensions[mimeType] || '';
+}
 
   return (
     <div className={`flex-1 overflow-auto relative z-10 ${backgroundColor}`}>
@@ -207,7 +269,7 @@ const DetectPage = () => {
                         <div>
                           <img src={url} className="u-margin-bottom" alt="" style={{ width: "100%", borderRadius: "20px" }} />
                           <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-                            <button className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mx-5'>
+                            <button className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mx-5' onClick={downloadBlobFromUrl}>
                               Download Image
                             </button>
                             {
@@ -334,7 +396,7 @@ const DetectPage = () => {
         closeIcon={<CircleX style={{color: "white"}}/>}
         >
       <h2 className={`text-2xl font-semibold ${textColor} u-margin-bottom-small`}>Choose Patient</h2>
-      <PatientsTable2 class_predictions={classifyRes} predicted_class={tumorType} url={url}/>
+      <PatientsTable2 class_predictions={classifyRes} predicted_class={tumorType} url={url} closeModal={onCloseModal} did={did}/>
     </Modal>
     </div>
   );

@@ -10,13 +10,14 @@ import { useAuth } from "../../contexts/authContext";
 import Lottie from "lottie-react";
 import animation from "../../assets/animation/loadingcubes.json";
 import moment from "moment";
-
+import { useNavigate } from "react-router-dom";
 const PatientsTable = ({ isDarkMode }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [allPatients, setAllPatients] = useState([]);
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const { currentUser } = useAuth();
 
@@ -193,6 +194,9 @@ const PatientsTable = ({ isDarkMode }) => {
                       <Eye
                         className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
                         style={{ cursor: "pointer" }}
+                        onClick={()=>{
+                          navigate(`patient/${user.pid}`)
+                        }}
                       />
                     </td>
                   </motion.tr>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, } from "react";
 import { motion } from "framer-motion";
 import { Search, Eye, Plus, CircleX } from "lucide-react";
 import 'react-responsive-modal/styles.css';
@@ -6,13 +6,14 @@ import { Modal } from 'react-responsive-modal';
 import AddPatientForm from "../forms/AddPatientForm";
 import { doc, setDoc, arrayUnion, updateDoc, getDoc } from "firebase/firestore";
 import { db, storage } from "../../firebase/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Import Firebase storage functions
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage"; // Import Firebase storage functions
 import { useAuth } from "../../contexts/authContext";
 import Lottie from "lottie-react";
 import animation from "../../assets/animation/loadingcubes.json"
 import moment from "moment";
 import toast from "react-hot-toast";
 import { nanoid } from "nanoid";
+import LoadingBar from 'react-top-loading-bar'
 
 const customStyles = {
 	content: {
@@ -26,12 +27,14 @@ const customStyles = {
 };
 
 
-const PatientsTable2 = ({ class_predictions, predicted_class, url, closeModal, did }) => {
+const PatientsTable3 = ({ blob, did, grade, closeModal }) => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filteredUsers, setFilteredUsers] = useState([]);
 	const [allPatients, setAllPatients] = useState([]);
 	const [open, setOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const [progress, setProgress] = useState(0);
+	const [isUploading, setIsUploading] = useState(false);
 
 	const { currentUser } = useAuth();
 
@@ -61,47 +64,80 @@ const PatientsTable2 = ({ class_predictions, predicted_class, url, closeModal, d
 
 	const addDiagnosis = async (pid) => {
 		setIsLoading(true);
-		console.log({ url, class_predictions, predicted_class, pid });
-		//get blob from url
-		const blob = await getBlobFromUrl(url);
-		// Get the MIME type from the Blob
-		const mimeType = blob.type;
-		// Determine the file extension from the MIME type
-		const extension = mimeType.split('/')[1]; // e.g., 'png', 'jpeg'
-		// Append the extension to the file name
-		const fileNameWithExtension = `${did}.${extension}`;
-		const storageRef = ref(storage, `diagnoses/${fileNameWithExtension}`); // Use the file name with extension
+		const fileNameWithExtension = `${did}.nii`;
+		const storageRef = ref(storage, `diagnoses/${fileNameWithExtension}`);
+		setIsUploading(true);
+
 		try {
-			await uploadBytes(storageRef, blob);
-			const downloadURL = await getDownloadURL(storageRef);
-			const currentDate = new Date();
-			const timestamp = currentDate.getTime()
-			const diagnosisObj  = {
-				url: downloadURL,
-				class_predictions: class_predictions.class_probabilities,
-				predicted_class,
-				pid,
-				did,
-				date: timestamp
-			}
-			//add data to firebase
-			await setDoc(doc(db, "detectDiagnosis", did), diagnosisObj);
-			//add to diagnosisSet under detect array
-			await updateDoc(doc(db, "diagnosisSets", pid), {
-				detect: arrayUnion(diagnosisObj)
-			});
-			//update last diagnosis date
-			await updateDoc(doc(db, "patients", pid), {
-				lastDiagnosis: timestamp
-			})
-			toast.success("Successfully Saved to patient");
+			// Use uploadBytesResumable to track upload progress
+			const uploadTask = uploadBytesResumable(storageRef, blob);
+
+			// Monitor the progress of the upload
+			uploadTask.on('state_changed',
+				(snapshot) => {
+					// Calculate upload progress as a percentage
+					const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+					console.log('Upload is ' + progress + '% done');
+
+					// Update progress state (for use in a progress bar)
+					setProgress(progress); // Update progress in state to show in UI
+
+					// Optional: Display different messages depending on the upload state
+					switch (snapshot.state) {
+						case 'paused':
+							console.log('Upload is paused');
+							break;
+						case 'running':
+							console.log('Upload is running');
+							break;
+						default:
+							break;
+					}
+				},
+				(error) => {
+					console.error('Upload failed:', error);
+					toast.error('Upload failed: ' + error.message);
+					setIsLoading(false);
+				},
+				async () => {
+					// Upload completed successfully, now get the download URL
+					const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+					const currentDate = new Date();
+					const timestamp = currentDate.getTime()
+					// Proceed with saving the diagnosis object
+					const diagnosisObj = {
+						did,
+						pid,
+						mri: downloadURL,
+						grade,
+						date: timestamp
+					};
+					// Upload to analysisDiagnosis collection
+					await setDoc(doc(db, "analysisDiagnosis", did), diagnosisObj);
+
+					// Add to diagnosisSet of the patient
+					await updateDoc(doc(db, "diagnosisSets", pid), {
+						analyze: arrayUnion(diagnosisObj)
+					});
+
+					// Update last diagnosis date
+					await updateDoc(doc(db, "patients", pid), {
+						lastDiagnosis: timestamp
+					});
+					closeModal();
+					toast.success("Successfully Saved to patient");
+					setIsUploading(false);
+					setIsLoading(false);
+				}
+			);
 		} catch (e) {
-			toast.error(e.code);
-		}finally{
-		setIsLoading(false);
-		closeModal()
+			console.error(e);
+			toast.error(e.message);
+			closeModal();
+			setIsUploading(false);
+			setIsLoading(false);
 		}
-	}
+	};
 
 	const handleSearch = (e) => {
 		const term = e.target.value.toLowerCase();
@@ -162,7 +198,7 @@ const PatientsTable2 = ({ class_predictions, predicted_class, url, closeModal, d
 	return (
 		<>
 			{isLoading ?
-				<div className="u-center-hrz">
+				<div className="u-center-hrz--col">
 					<Lottie animationData={animation} style={{ width: "200px" }} />
 				</div> :
 
@@ -259,8 +295,10 @@ const PatientsTable2 = ({ class_predictions, predicted_class, url, closeModal, d
 					</div>
 				</motion.div>
 			}
+			<LoadingBar color={"#0094ff"} progress={progress}
+				onLoaderFinished={() => setProgress(0)} />
 		</>
 
 	);
 };
-export default PatientsTable2;
+export default PatientsTable3;

@@ -16,6 +16,7 @@ import RegisterPage from "./pages/RegisterPage";
 import toast, { Toaster } from 'react-hot-toast';
 import EditProfilePage from "./pages/EditProfilePage";
 import { useEffect } from "react";
+import PatientPage from "./pages/PatientPage";
 
 function App() {
 
@@ -47,6 +48,7 @@ function App() {
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/patient/:pid" element={<PatientPage />} />
       </Routes>
      
     </div>

@@ -45,6 +45,10 @@ const AddPatientForm = ({ closeModal, getPatients, isDarkMode }) => {
         await updateDoc(doc(db, "users", currentUser.uid), {
           patients: arrayUnion(pid),
         });
+        await setDoc(doc(db, "diagnosisSets", pid), {
+          analyze: [],
+          detect: []
+        })
         toast.success("Successfully added patient");
       } catch (e) {
         toast.error(e.code);
