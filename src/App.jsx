@@ -15,10 +15,17 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import toast, { Toaster } from 'react-hot-toast';
 import EditProfilePage from "./pages/EditProfilePage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PatientPage from "./pages/PatientPage";
 
+
 function App() {
+  const [loggedInUser, setLoggedInUser] = useState(null);
+
+  useEffect(() => {
+    setLoggedInUser(JSON.parse(localStorage.getItem("currentUser")));
+  }, []);
+
 
   return (
 
@@ -33,8 +40,8 @@ function App() {
 
       <Sidebar />
       <Routes>
-        <Route path="/" element={<OverviewPage />} />
-        <Route path="/howto" element={<HowToPage />} />
+        <Route path="/overview" element={<OverviewPage />} />
+        <Route path="/" element={<HowToPage />} />
         <Route path="/detect" element={<DetectPage />} />
         <Route path="/analyze" element={<AnalysisPage />} />
         <Route path="/visualize" element={<VisualizePage />} />

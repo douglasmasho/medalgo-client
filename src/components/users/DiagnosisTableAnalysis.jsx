@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Eye, Plus, CircleX } from "lucide-react";
+import { Search, Eye, Plus, CircleX, Download } from "lucide-react";
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 import AddPatientForm from "../forms/AddPatientForm";
@@ -37,7 +37,7 @@ const convertToData = (object) => {
 const DiagnosisTable = ({ diagnoses }) => {
 
     const [open, setOpen] = useState(false);
-    const [open2, setOpen2] = useState(false);
+
     const [dataObj, setDataObj] = useState(null);
     const [loading, setLoading] = useState(false);
     const [url, setUrl] = useState("")
@@ -48,16 +48,6 @@ const DiagnosisTable = ({ diagnoses }) => {
     const onOpenModal = () => setOpen(true);
     const onCloseModal = () => setOpen(false);
 
-    const onOpenModal2 = () => setOpen2(true);
-    const onCloseModal2 = () => setOpen2(false);
-
-
-
-
-
-    useEffect(() => {
-
-    }, []);
 
     return (
         <motion.div
@@ -87,6 +77,9 @@ const DiagnosisTable = ({ diagnoses }) => {
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                                 Pedicted Grade
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                                Download NII
                             </th>
                         </tr>
                     </thead>
@@ -119,13 +112,19 @@ const DiagnosisTable = ({ diagnoses }) => {
                                             "High Grade Glioma"}
                                     </span>
                                 </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <a href={diagnosis.mri} target="_blank">
+                                    <Download style={{ cursor: "pointer" }} />
+                                    </a>
+
+                                </td>
                             </motion.tr>
                         ))}
                     </tbody>
                 </table>
             </div>
 
-
+          
         </motion.div>
 
     );
