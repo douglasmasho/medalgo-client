@@ -25,7 +25,7 @@ const SIDEBAR_ITEMS = [
   },
   { name: "Dashboard", icon: LayoutDashboard, color: "#0094ff", href: "/overview" },
   { name: "Detect", icon: Search, color: "#0094ff", href: "/detect" },
-  { name: "Analyze", icon: BrainCircuit, color: "#0094ff", href: "/analyze" },
+  { name: "Grade", icon: BrainCircuit, color: "#0094ff", href: "/analyze" },
   { name: "Visualize", icon: View, color: "#0094ff", href: "/visualize" },
   { name: "Profile", icon: User, color: "#0094ff", href: "/profile" },
 ];

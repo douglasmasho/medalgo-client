@@ -12,8 +12,8 @@ const HowToPage = () => {
   // Set dynamic colors based on the mode
   const backgroundColor = isDarkMode ? "bg-gray-900" : "bg-white";
   const borderColor = isDarkMode ? "border-gray-800" : "border-gray-300";
-  const textColor = isDarkMode ? "text-gray-100" : "text-gray-900";
-  const secondaryTextColor = isDarkMode ? "text-gray-400" : "text-gray-600";
+  const textColor = isDarkMode ? "white-text" : "text-gray-900";
+  const secondaryTextColor = isDarkMode ? "white-text" : "text-gray-600";
 
   return (
     <div className={`flex-1 overflow-auto relative z-10 ${backgroundColor}`}>
@@ -76,7 +76,7 @@ const HowToPage = () => {
                       size={100}
                       className="u-margin-bottom-small"
                     />
-                    <h3 className={`bigish-text ${textColor}`}>Analyze</h3>
+                    <h3 className={`bigish-text ${textColor}`}>Grade</h3>
                   </div>
                 </motion.div>
 
@@ -147,13 +147,13 @@ const HowToPage = () => {
                 <BrainCircuit
                   style={{ color: "#3B82F6", marginRight: "10px" }}
                 />
-                Analyze
+                Grade
               </h2>
               <h3 className={`u-margin-bottom-tiny bigish-text ${textColor}`}>
                 Introduction
               </h3>
               <p className={`u-margin-bottom-small ${secondaryTextColor}`}>
-                Analyze helps determine whether a glioma tumor is high-grade
+                Grade helps determine whether a glioma tumor is high-grade
                 (HGG) or low-grade (LGG). Upload a .nii file, and Medalgo will
                 classify the grade, offering insight for further medical
                 evaluation.
@@ -167,7 +167,7 @@ const HowToPage = () => {
                   Open the{" "}
                   <strong>
                     <BrainCircuit style={{ color: "#3B82F6", margin: "5px" }} />
-                    Analyze
+                    Grade
                   </strong>{" "}
                   section.
                 </li>

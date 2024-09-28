@@ -61,7 +61,7 @@ const DiagnosisTable = ({ diagnoses }) => {
         >
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold">
-                    Detection Diagnoses
+                    Grade Diagnoses
                 </h2>
             </div>
 

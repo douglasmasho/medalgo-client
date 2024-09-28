@@ -17,6 +17,7 @@ import DiagnosisTable2 from "../components/users/DiagnosisTableAnalysis";
 
 
 const PatientPage = () => {
+    console.log("uhifuwhe")
     const { currentUser, userLoggedIn } = useAuth();
     const { isDarkMode } = useDarkMode(); // Use dark mode context
     const { pid } = useParams();
@@ -98,9 +99,10 @@ const PatientPage = () => {
                                 <p className={textColor}>Name: {patient.fullName}</p>
                                 <p className={textColor}>Gender: {patient.gender}</p>
                                 <p className={textColor}>Age: {getAge(patient.dob)}</p>
-                                <p className={textColor}>Last Diagnosis: {moment(patient.lastDiagnosis).format(
-                                    "Do MMMM YYYY, h:mm:ss a"
-                                )}</p>
+                                
+                                <p className={textColor}>Last Diagnosis: {
+                                    patient.lastDiagnosis ?
+                                moment(patient.lastDiagnosis).format("Do MMMM YYYY, h:mm:ss a") : "Not yet diagnosed"}</p>
 
                             </motion.div>
                         </main>
@@ -111,7 +113,7 @@ const PatientPage = () => {
                                         className={`shadow-lg rounded-xl p-6 border ${backgroundColor} ${borderColor}`}
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.4, duration: 1 }}
+                                        transition={{ delay: 0.3, duration: 1 }}
                                     >
                                         <DiagnosisTable diagnoses={detectDiagnoses} />
                                     </motion.div>
@@ -125,7 +127,7 @@ const PatientPage = () => {
                                 className={`shadow-lg rounded-xl p-6 border ${backgroundColor} ${borderColor}`}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.6, duration: 1 }}
+                                transition={{ delay: 0.5, duration: 1 }}
                             >
                                 <DiagnosisTable2 diagnoses={analysisDiagnoses} />
                             </motion.div>
