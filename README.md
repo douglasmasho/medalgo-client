@@ -1,7 +1,5 @@
 <h1 align="center">Medalgo Dashboard</h1>
 
-[Video Tutorial on Youtube](https://youtu.be/gK0v_d91epk)
-
 ### This was created using:
 
 -   React
