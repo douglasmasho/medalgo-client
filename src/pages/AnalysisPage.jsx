@@ -117,7 +117,7 @@ const AnalysisPage = () => {
                           const request = new XMLHttpRequest();
 
                           // Open the POST request to the FastAPI server
-                          request.open("POST", "http://127.0.0.1:8002/predict");
+                          request.open("POST", "https://medalgo-grade.onrender.com/predict");
 
                           // Expecting JSON response from the server
                           request.responseType = "json";
