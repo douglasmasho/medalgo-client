@@ -192,12 +192,12 @@ function getFileExtension(mimeType) {
 
                           request.open(
                             "POST",
-                            "https://medalgo-detect.onrender.com/predict"
+                            "http://127.0.0.1:8000/predict"
                           );
 
                           request2.open(
                             "POST",
-                            "https://medalgo-classify.onrender.com/predict"
+                            "http://127.0.0.1:8001/predict"
                           )
 
                           request.responseType = "blob";
