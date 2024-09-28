@@ -195,7 +195,7 @@ const PatientsTable = ({ isDarkMode }) => {
                         className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
                         style={{ cursor: "pointer" }}
                         onClick={()=>{
-                          navigate(`patient/${user.pid}`)
+                          navigate(`/patient/${user.pid}`)
                         }}
                       />
                     </td>
