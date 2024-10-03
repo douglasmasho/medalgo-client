@@ -163,7 +163,7 @@ const EditProfilePage = () => {
 		<div className={`flex-1 overflow-auto relative z-10 ${backgroundColor}`}>
 			{!userLoggedIn ? (<Navigate to="/login" replace={true} />) :
 				<>
-					<Header title='Edit Profile' icon={<UserRoundPen className="mr-2" />} />
+					<Header title='Edit Profile' icon={<UserRoundPen className="mr-2" color="#0094ff"/>} />
 					<main className='max-w-4xl mx-auto py-6 px-4 lg:px-8'>
 						<SettingSection icon={User} title={"Profile Picture"}>
 							{

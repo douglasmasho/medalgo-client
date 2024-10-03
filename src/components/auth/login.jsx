@@ -56,7 +56,7 @@ const Login = () => {
                                 autoComplete='email'
                                 required
                                 value={email} onChange={(e) => { setEmail(e.target.value) }}
-                                className={`mt-2 px-3 py-2 ${isDarkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-transparent border'} outline-none focus:border-indigo-600 shadow-sm rounded-lg transition duration-300`}
+                                className={`mt-2 px-3 py-2 ${isDarkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-transparent border text-black'} outline-none focus:border-indigo-600 shadow-sm rounded-lg transition duration-300`}
                                 style={{ width: "100%" }}
                             />
                         </div>
@@ -70,7 +70,7 @@ const Login = () => {
                                 autoComplete='current-password'
                                 required
                                 value={password} onChange={(e) => { setPassword(e.target.value) }}
-                                className={`w-full mt-2 px-3 py-2 ${isDarkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-transparent border'} outline-none focus:border-indigo-600 shadow-sm rounded-lg transition duration-300`}
+                                className={`w-full mt-2 px-3 py-2 ${isDarkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-transparent border text-black'} outline-none focus:border-indigo-600 shadow-sm rounded-lg transition duration-300`}
                             />
                         </div>
 
