@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Eye, Plus, CircleX } from "lucide-react";
+import { Search, Eye, Plus, CircleX, Trash2, Circle } from "lucide-react";
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 import AddPatientForm from "../forms/AddPatientForm";
@@ -34,15 +34,17 @@ const convertToData = (object) => {
 
 
 
-const DiagnosisTable = ({ diagnoses }) => {
+const DiagnosisTable = ({ diagnoses, deleteDiagnosis }) => {
 
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
+    const [open3, setOpen3] = useState(false);
     const [dataObj, setDataObj] = useState(null);
     const [loading, setLoading] = useState(false);
     const [url, setUrl] = useState("")
     const { currentUser } = useAuth();
     const { isDarkMode } = useDarkMode();
+    const [currentDiagnosis, setCurrentDiagnosis] = useState("");
 
 
     const onOpenModal = () => setOpen(true);
@@ -51,43 +53,12 @@ const DiagnosisTable = ({ diagnoses }) => {
     const onOpenModal2 = () => setOpen2(true);
     const onCloseModal2 = () => setOpen2(false);
 
+    const onOpenModal3 = () => setOpen3(true);
+    const onCloseModal3 = () => setOpen3(false);
+
     async function downloadBlobFromUrl() {
         console.log(url)
-        // try {
-        //     // Fetch the image
-        //     const response = await fetch(url);
-        //     if (!response.ok) {
-        //         throw new Error(`Failed to fetch image: ${response.statusText}`);
-        //     }
-    
-        //     // Convert the response to a Blob
-        //     const blob = await response.blob();
-    
-        //     // Create a link element
-        //     const link = document.createElement('a');
-            
-        //     // Create an object URL from the blob
-        //     const blobUrl = URL.createObjectURL(blob);
-            
-        //     // Set the href of the link to the object URL
-        //     link.href = blobUrl;
-            
-        //     // Set the download attribute with a file name
-        //     const fileName = url.split('/').pop().split('?')[0]; // Get the file name from the URL
-        //     link.download = fileName;
-            
-        //     // Append to body, click, and remove
-        //     document.body.appendChild(link);
-        //     link.click();
-        //     document.body.removeChild(link);
-    
-        //     // Clean up by revoking the object URL
-        //     URL.revokeObjectURL(blobUrl);
-    
-        //     console.log('Download triggered successfully!');
-        // } catch (error) {
-        //     console.error('Error downloading image:', error);
-        // }
+
     }
 
 
@@ -131,6 +102,9 @@ const DiagnosisTable = ({ diagnoses }) => {
                             <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                                 View MRI detection
                             </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                                Delete
+                            </th>
                         </tr>
                     </thead>
 
@@ -172,6 +146,13 @@ const DiagnosisTable = ({ diagnoses }) => {
                                     <Eye style={{ cursor: "pointer" }} onClick={() => {
                                         setUrl(diagnosis.url);
                                         onOpenModal2()
+                                    }} />
+                                </td>
+
+                                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                    <Trash2 style={{ cursor: "pointer" }} onClick={()=>{
+                                        setCurrentDiagnosis(diagnosis);
+                                        onOpenModal3();
                                     }} />
                                 </td>
                             </motion.tr>
@@ -227,6 +208,52 @@ const DiagnosisTable = ({ diagnoses }) => {
                 <a className='bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto' href={url} target="_blank">
                     Download Image
                 </a>
+            </Modal>
+
+
+            <Modal
+                open={open3}
+                onClose={onCloseModal3}
+                center
+                classNames={{
+                    modal: `${isDarkMode
+                        ? "bg-gray-800 text-white"
+                        : "bg-white text-gray-900"
+                        } backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700`,
+                }}
+                styles={{
+                    modal: {
+                        width: "80%",
+                    },
+                }}
+                closeIcon={<CircleX
+                    style={isDarkMode ? { color: "white" } : { color: " black" }}
+                />}
+            >
+                <h3 className="bigger-text">Are you sure you want to delete this diagnosis?</h3>
+                <div style={{ display: "flex" }} className="u-margin-top">
+                    <motion.button
+                        className="bg-red-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mr-5"
+                        style={{ display: "flex", alignItems: "center" }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={()=>{deleteDiagnosis(currentDiagnosis)}}
+                    >
+                        <Trash2 className="mr-2" />
+                        Yes, Delete Diagnosis
+                    </motion.button>
+                    <motion.button
+                        className="bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mr-5"
+                        style={{ display: "flex", alignItems: "center" }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={onCloseModal3}
+                    >
+                        <CircleX className="mr-2" />
+                        No, Cancel
+                    </motion.button>
+                </div>
+
             </Modal>
         </motion.div>
 

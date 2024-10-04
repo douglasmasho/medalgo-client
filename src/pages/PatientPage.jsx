@@ -3,11 +3,11 @@ import { User, CircleX, Pencil, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "../components/common/Header";
 import { useAuth } from "../contexts/authContext/index";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useDarkMode } from "../contexts/darkModeContext";
 import { useParams } from "react-router-dom";
 import { db } from "../firebase/firebase";
-import { getDoc, doc, deleteDoc } from "firebase/firestore";
+import { getDoc, doc, deleteDoc, arrayRemove, updateDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 import Lottie from "lottie-react";
 import animation from "../assets/animation/loadingcubes.json";
@@ -19,7 +19,7 @@ import EditPatientForm from "../components/forms/EditPatientForm";
 
 
 const PatientPage = () => {
-    console.log("uhifuwhe")
+
     const { currentUser, userLoggedIn } = useAuth();
     const { isDarkMode } = useDarkMode(); // Use dark mode context
     const { pid } = useParams();
@@ -28,13 +28,18 @@ const PatientPage = () => {
     const [detectDiagnoses, setDetectDiagnoses] = useState([]);
     const [analysisDiagnoses, setAnalysisDiagnoses] = useState([]);
     const [open, setOpen] = useState(false);
+    const [open2, setOpen2] = useState(false);
 
 
     const onOpenModal = () => setOpen(true);
     const onCloseModal = () => setOpen(false);
 
+    const onOpenModal2 = () => setOpen2(true);
+    const onCloseModal2 = () => setOpen2(false);
+
+    const navigate = useNavigate()
+
     useEffect(() => {
-        console.log(pid);
         getPatient();
         getDiagnoses();
     }, [])
@@ -42,6 +47,7 @@ const PatientPage = () => {
     const getPatient = async () => {
         setIsLoading(true);
         try {
+            
             const patient = await getDoc(doc(db, "patients", pid));
             setPatient(patient.data())
         } catch (e) {
@@ -72,27 +78,79 @@ const PatientPage = () => {
         }
     }
 
-    const deleteDiagnosis = async(pid, did, grade)=>{
-        try{
-            //remove the document from the rightful collection.
+    const deleteDiagnosis = async (diagnosis) => {
+        try {
+            setIsLoading(true)
             // check if diagnosis has grade
-            setIsLoading(true);
-            let collectionString = grade ? "analysisDiagnosis" : "detectDiagnosis";
-            await deleteDoc(doc(db, collectionString, did))
+            let collectionString = diagnosis.grade ? "analysisDiagnosis" : "detectDiagnosis";
+            let arrayString = diagnosis.grade ? "analyze" : "detect"
+            // await deleteDoc(doc(db, collectionString, did))
 
             //remove it from the diagnosisSet of the patient
-            await updateDoc(doc())
-        }catch(e){
+            //to do this first get the diagnosis with the did
+            const docRef = await getDoc(doc(db, "diagnosisSets", pid));
+            console.log(diagnosis.did)
+            const toBeRemoved = docRef.data()[arrayString].find((el) => el.did === diagnosis.did);
+            console.log(toBeRemoved)
+
+            await updateDoc(doc(db, "diagnosisSets", pid), {
+                [arrayString]: arrayRemove(toBeRemoved)
+            })
+
+            //remove the document
+            await deleteDoc(doc(db, collectionString, diagnosis.did));
+            toast.success("Diagnosis Deleted");
+        } catch (e) {
             toast.error(e.code);
             console.log(e)
-        }finally{
-            setIsLoading(false)
+        } finally {
+            setIsLoading(false);
+            getDiagnoses();
         }
     }
 
-    const deletePatient = ()=>{
 
-    }
+
+    const deletePatient = async() => {
+        try {
+            setIsLoading(true);
+            
+            // Get all diagnosis IDs
+            const docRef = await getDoc(doc(db, "diagnosisSets", pid));
+            
+            // Function to remove diagnoses
+            const removeDiagnoses = async (arr, type) => {
+                const deletePromises = arr.map(async (el) => {
+                    await deleteDoc(doc(db, type, el.did));
+                });
+    
+                // Wait for all deletions to complete
+                await Promise.all(deletePromises);
+            };
+    
+            // Wait for removeDiagnoses to finish before proceeding
+            await removeDiagnoses(docRef.data()?.analyze, "analysisDiagnosis");
+            await removeDiagnoses(docRef.data()?.detect, "detectDiagnosis");
+            
+            // Further steps after diagnoses removal:
+            // - remove diagnosis set of patient
+            await deleteDoc(doc(db, "diagnosisSets", pid));
+            // - delete patient document
+            await deleteDoc(doc(db, "patients", pid));
+            // - remove patientID from user's collection
+            await updateDoc(doc(db, "users", currentUser.uid), {
+                patients: arrayRemove(pid)
+            })
+        } catch(e) {
+            toast.error(e.code);
+            console.log(e);  
+        } finally {
+            setIsLoading(false);
+            toast.success("Patient has been deleted")
+            navigate("/overview");
+        }
+    };
+    
 
     // Set dynamic colors based on the mode
     const backgroundColor = isDarkMode ? "bg-gray-800" : "bg-white";
@@ -130,7 +188,7 @@ const PatientPage = () => {
                                 <p className={textColor}>Last Diagnosis: {
                                     patient.lastDiagnosis ?
                                         moment(patient.lastDiagnosis).format("Do MMMM YYYY, h:mm:ss a") : "Not yet diagnosed"}</p>
-                                <div className="u-margin-top-small" style={{display: "flex"}}>
+                                <div className="u-margin-top-small" style={{ display: "flex" }}>
                                     <motion.button
                                         className="bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mr-5"
                                         style={{ display: "flex", alignItems: "center" }}
@@ -147,6 +205,7 @@ const PatientPage = () => {
                                         style={{ display: "flex", alignItems: "center" }}
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.9 }}
+                                        onClick={onOpenModal2}
                                     >
                                         <Trash2 className="mr-2" />
                                         Delete Patient
@@ -164,7 +223,7 @@ const PatientPage = () => {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.3, duration: 1 }}
                                     >
-                                        <DiagnosisTable diagnoses={detectDiagnoses} />
+                                        <DiagnosisTable pid={pid} deleteDiagnosis={deleteDiagnosis} diagnoses={detectDiagnoses} />
                                     </motion.div>
                                 </main> : null
                         }
@@ -178,35 +237,79 @@ const PatientPage = () => {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.5, duration: 1 }}
                                     >
-                                        <DiagnosisTable2 diagnoses={analysisDiagnoses} />
+                                        <DiagnosisTable2 pid={pid} diagnoses={analysisDiagnoses} deleteDiagnosis={deleteDiagnosis} />
                                     </motion.div>
                                 </main> : null
                         }
-          <Modal
-            open={open}
-            onClose={onCloseModal}
-            center
-            classNames={{
-              modal: `${
-                isDarkMode
-                  ? "bg-gray-800 text-white"
-                  : "bg-white text-gray-900"
-              } backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700`,
-            }}
-            styles={{
-              modal: {
-                width: "80%",
-              },
-            }}
-            closeIcon={<CircleX 
-				style={isDarkMode ? { color: "white" } : {color:" black"}}
-				 />}
-          >
-            <h2 className="text-2xl font-semibold">
-              Edit Patient
-            </h2>
-            <EditPatientForm closeModal={onCloseModal} getPatient={getPatient} isDarkMode={isDarkMode} pid={pid} fullNameProp={patient.fullName} genderProp={patient.gender} dobProp={patient.dob}/>
-          </Modal>
+                        <Modal
+                            open={open}
+                            onClose={onCloseModal}
+                            center
+                            classNames={{
+                                modal: `${isDarkMode
+                                    ? "bg-gray-800 text-white"
+                                    : "bg-white text-gray-900"
+                                    } backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700`,
+                            }}
+                            styles={{
+                                modal: {
+                                    width: "80%",
+                                },
+                            }}
+                            closeIcon={<CircleX
+                                style={isDarkMode ? { color: "white" } : { color: " black" }}
+                            />}
+                        >
+                            <h2 className="text-2xl font-semibold">
+                                Edit Patient
+                            </h2>
+                            <EditPatientForm closeModal={onCloseModal} getPatient={getPatient} isDarkMode={isDarkMode} pid={pid} fullNameProp={patient.fullName} genderProp={patient.gender} dobProp={patient.dob} />
+                        </Modal>
+
+                        <Modal
+                            open={open2}
+                            onClose={onCloseModal2}
+                            center
+                            classNames={{
+                                modal: `${isDarkMode
+                                    ? "bg-gray-800 text-white"
+                                    : "bg-white text-gray-900"
+                                    } backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700`,
+                            }}
+                            styles={{
+                                modal: {
+                                    width: "80%",
+                                },
+                            }}
+                            closeIcon={<CircleX
+                                style={isDarkMode ? { color: "white" } : { color: " black" }}
+                            />}
+                        >
+                            <h3 className="bigger-text">Are you sure you want to delete this patient?</h3>
+                            <div style={{ display: "flex" }} className="u-margin-top">
+                                <motion.button
+                                    className="bg-red-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mr-5"
+                                    style={{ display: "flex", alignItems: "center" }}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    onClick={deletePatient}
+                                >
+                                    <Trash2 className="mr-2" />
+                                    Yes, Delete Diagnosis
+                                </motion.button>
+                                <motion.button
+                                    className="bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mr-5"
+                                    style={{ display: "flex", alignItems: "center" }}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    onClick={onCloseModal2}
+                                >
+                                    <CircleX className="mr-2" />
+                                    No, Cancel
+                                </motion.button>
+                            </div>
+
+                        </Modal>
                     </>
             )}
         </div>

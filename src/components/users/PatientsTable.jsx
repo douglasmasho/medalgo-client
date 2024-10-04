@@ -39,6 +39,39 @@ const PatientsTable = ({ isDarkMode }) => {
     return currentMoment.diff(birthMoment, "years");
   };
 
+  // const getPatients = async () => {
+  //   setFilteredUsers([]);
+  //   setAllPatients([]);
+  //   try {
+  //     setIsLoading(true);
+  //     const docSnap = await getDoc(doc(db, "users", currentUser.uid));
+  //     const patientsList = docSnap.data().patients;
+  //     if (patientsList.length === 0) {
+  //       setIsLoading(0);
+  //     } else {
+  //       patientsList.forEach(async (pid, index) => {
+  //         const docSnap = await getDoc(doc(db, "patients", pid));
+  //         setFilteredUsers((prevState) => [
+  //           ...prevState,
+  //           { ...docSnap.data(), age: getAge(docSnap.data().dob) },
+  //         ]);
+          
+  //         setAllPatients((prevState) => [
+  //           ...prevState,
+  //           { ...docSnap.data(), age: getAge(docSnap.data().dob) },
+  //         ]);
+  //         if (index === patientsList.length - 1) {
+  //           setIsLoading(false);
+  //         }
+  //       });
+
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const getPatients = async () => {
     setFilteredUsers([]);
     setAllPatients([]);
@@ -46,30 +79,43 @@ const PatientsTable = ({ isDarkMode }) => {
       setIsLoading(true);
       const docSnap = await getDoc(doc(db, "users", currentUser.uid));
       const patientsList = docSnap.data().patients;
+  
       if (patientsList.length === 0) {
-        setIsLoading(0);
+        setIsLoading(false);
       } else {
-        patientsList.forEach(async (pid, index) => {
-          const docSnap = await getDoc(doc(db, "patients", pid));
-          setFilteredUsers((prevState) => [
-            ...prevState,
-            { ...docSnap.data(), age: getAge(docSnap.data().dob) },
-          ]);
-          setAllPatients((prevState) => [
-            ...prevState,
-            { ...docSnap.data(), age: getAge(docSnap.data().dob) },
-          ]);
-          if (index === patientsList.length - 1) {
-            setIsLoading(false);
+        // Collect all patient data in an array first
+        const patientDataArray = await Promise.all(
+          patientsList.map(async (pid) => {
+            const patientSnap = await getDoc(doc(db, "patients", pid));
+            return {
+              ...patientSnap.data(),
+              age: getAge(patientSnap.data().dob),
+            };
+          })
+        );
+  
+        // Sort the array after all patients are fetched
+        const sortedPatients = patientDataArray.sort((a, b) => {
+          if (a.lastDiagnosis < b.lastDiagnosis) {
+            return 1;
+          } else if (a.lastDiagnosis > b.lastDiagnosis) {
+            return -1;
+          } else {
+            return 0;
           }
         });
+  
+        // Update the state once with sorted patients
+        setFilteredUsers(sortedPatients);
+        setAllPatients(sortedPatients);
+        setIsLoading(false);
       }
     } catch (e) {
       console.log(e);
       setIsLoading(false);
     }
   };
-
+  
   useEffect(() => {
     getPatients();
   }, []);
