@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Eye, Plus, CircleX, Download } from "lucide-react";
+import { Search, Eye, Plus, CircleX, Download, Trash2 } from "lucide-react";
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 import AddPatientForm from "../forms/AddPatientForm";
@@ -34,19 +34,28 @@ const convertToData = (object) => {
     })
 };
 
-const DiagnosisTable = ({ diagnoses }) => {
+const DiagnosisTable = ({ diagnoses, deleteDiagnosis }) => {
 
     const [open, setOpen] = useState(false);
+    const [open2, setOpen2] = useState(false);
 
     const [dataObj, setDataObj] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [currentDiagnosis, setCurrentDiagnosis] = useState("");
+
     const [url, setUrl] = useState("")
     const { currentUser } = useAuth();
     const { isDarkMode } = useDarkMode();
 
 
+
+
     const onOpenModal = () => setOpen(true);
     const onCloseModal = () => setOpen(false);
+
+    const onOpenModal2 = () => setOpen2(true);
+    const onCloseModal2 = () => setOpen2(false);
+
 
 
     return (
@@ -81,6 +90,9 @@ const DiagnosisTable = ({ diagnoses }) => {
                             <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                                 Download NII
                             </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                                Delete
+                            </th>
                         </tr>
                     </thead>
 
@@ -114,17 +126,68 @@ const DiagnosisTable = ({ diagnoses }) => {
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <a href={diagnosis.mri} target="_blank">
-                                    <Download style={{ cursor: "pointer" }} />
+                                        <Download style={{ cursor: "pointer" }} />
                                     </a>
 
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <Trash2 style={{ cursor: "pointer" }} onClick={() => {
+                                        setCurrentDiagnosis(diagnosis);
+                                        onOpenModal2();
+                                    }} />
                                 </td>
                             </motion.tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+            <Modal
+                open={open2}
+                onClose={onCloseModal2}
+                center
+                classNames={{
+                    modal: `${isDarkMode
+                        ? "bg-gray-800 text-white"
+                        : "bg-white text-gray-900"
+                        } backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700`,
+                }}
+                styles={{
+                    modal: {
+                        width: "80%",
+                    },
+                }}
+                closeIcon={<CircleX
+                    style={isDarkMode ? { color: "white" } : { color: " black" }}
+                />}
+            >
+                <h3 className="bigger-text">Are you sure you want to delete this diagnosis?</h3>
+                <div style={{ display: "flex" }} className="u-margin-top">
+                    <motion.button
+                        className="bg-red-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mr-5"
+                        style={{ display: "flex", alignItems: "center" }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => {
+                            deleteDiagnosis(currentDiagnosis);
+                        }}
+                    >
+                        <Trash2 className="mr-2" />
+                        Yes, Delete Diagnosis
+                    </motion.button>
+                    <motion.button
+                        className="bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto mr-5"
+                        style={{ display: "flex", alignItems: "center" }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={onCloseModal2}
+                    >
+                        <CircleX className="mr-2" />
+                        No, Cancel
+                    </motion.button>
+                </div>
 
-          
+            </Modal>
+
         </motion.div>
 
     );
