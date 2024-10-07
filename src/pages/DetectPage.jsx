@@ -390,6 +390,7 @@ function getFileExtension(mimeType) {
         }}
         styles={{
           modal: {
+            maxWidth: "100%"
             // width: "80%"
           }
         }}
