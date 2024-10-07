@@ -19,6 +19,9 @@ import { useEffect, useState } from "react";
 import PatientPage from "./pages/PatientPage";
 
 
+
+
+
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
 
