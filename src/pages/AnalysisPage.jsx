@@ -333,7 +333,7 @@ const AnalysisPage = () => {
         }}
         styles={{
           modal: {
-            // width: "80%"
+            maxWidth: "100%"
           },
         }}
         closeIcon={<CircleX style={{ color: "white" }} />}
